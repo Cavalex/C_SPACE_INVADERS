@@ -3,17 +3,18 @@
 #include <windows.h>
 #include <time.h> 
 #include <stdbool.h>
+#include <dos.h>
 //#include <iostream>
 #include <conio.h>
 
-// Esta era para o caso de termos gr·ficos no jogo.
+// Esta era para o caso de termos gr√°ficos no jogo.
 //#include <graphics.h>
 
-int WIDTH = 50;
+int WIDTH = 30;
 int LENGTH = 100;
 
-// FunÁ„o que encontrei para mudar o tamanho da consola.
-// Para mudar o tamanho mexam nas vari·veis em cima, podem ignorar o cÛdigo dentro desta funÁ„o.
+// Fun√ß√£o que encontrei para mudar o tamanho da consola.
+// Para mudar o tamanho mexam nas vari√°veis em cima, podem ignorar o c√≥digo dentro desta fun√ß√£o.
 void setConsoleSize(){
 	HANDLE wHnd;    // Handle to write to the console.
 	HANDLE rHnd;    // Handle to read from the console.
@@ -31,7 +32,7 @@ void setConsoleSize(){
     SetConsoleScreenBufferSize(wHnd, bufferSize);
 }
 
-// Esta funÁ„o vai ser a mais importante para o jogo.
+// Esta fun√ß√£o vai ser a mais importante para o jogo.
 void showMap(){
 	int i, j;
 	// Desenhar o mapa
@@ -51,6 +52,9 @@ void showMap(){
 			}
 			
 			//############ RESERVADO PARA AS NAVES/BOSS ############
+			if (j == 5 && i == 5){
+				printf("T");
+			}
 			
 			
 			else{
@@ -61,10 +65,10 @@ void showMap(){
 	}
 }
 
-// SÛ para ser mais r·pido arranjar um n˙mero aleatÛrio.
+// S√≥ para ser mais r√°pido arranjar um n√∫mero aleat√≥rio.
 int getRandomNumber(int min, int max){
 	
-	// um n˙mero aleatÛrio entre 0 e a
+	// um n√∫mero aleat√≥rio entre 0 e a
 	int r = (rand() % (max + 1 - min)) + min;
 
 	return r;
@@ -72,20 +76,15 @@ int getRandomNumber(int min, int max){
 
 int main() {
 	
-	char ch;
-
-	int pause;
-	
 	int x;
 	int y;
-	bool food_bool = false;
 	
 	setConsoleSize();
 	
 	while (true){
 		showMap();
+		Beep(4000, 300); // Para fazer sons!
 		sleep(10000); // Para para o programa
 	}
 	return 0;
 }
-
