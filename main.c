@@ -43,11 +43,28 @@ void showMap(){
 			}
 			
 			//############ RESERVADO PARA AS NAVES/BOSS ############
-			if (j == 5 && i == 5){
-				printf("T");
+			if (j>23 && j%5==0 && i==5){
+				if (c>10) printf(" ");
+					else printf("T");
+				c++;
+				continue;
+				
 			}
-			
-			
+
+			if (j>23 && (j-2)%5 ==0 && i==3){
+				if (c>9) printf(" ");
+					else printf("T");
+				c++;
+				continue;
+				
+			}
+			if (j>23 && (j-2)%5 ==0 && i==7){
+				if (c>9) printf(" ");
+					else printf("T");
+				c++;
+				continue;
+				
+			}
 			else{
 				printf(" ");
 			}
