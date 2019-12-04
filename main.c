@@ -2,17 +2,58 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <time.h> 
-#include <stdbool.h>
+#include <stdbool.h> // Para criar funções booleanas
+#include <conio.h>
 
+#define NUMBER_OF_ENEMIES 25
+#define ARRAY_LENGTH 3
+#define WIDTH 30
+#define LENGTH 50
 
-// Esta era para o caso de termos grÃ¡ficos no jogo.
-//#include <graphics.h>
+int enemies[NUMBER_OF_ENEMIES][ARRAY_LENGTH];
 
-int WIDTH = 30;
-int LENGTH = 50;
+void fillEnemies(){
+	int l = 1;
+	int j = 0, h = 0;
+	for (j = 0; j < NUMBER_OF_ENEMIES; j++){
+		l += 5;
+		for (h = 0; h < ARRAY_LENGTH; h++){
+			// Para definir o X
+		
+			if (h == 0 && j < 8){
+				enemies[j][h] = l;
+			}
+			if (h == 0 && j >= 8 && j <= 17){
+				enemies[j][h] = (l - 2);
+			}
+			if (h == 0 && j > 16 && j <= 25){
+				enemies[j][h] = l;
+			}
+			
+			// Para definir o Y;
+			if (h == 1 && j < 8){
+				enemies[j][h] = 3;
+			}
+			if (h == 1 && j >= 8 && j <= 17){
+				enemies[j][h] = 5;
+			}
+			if (h == 1 && j > 16 && j <= 25){
+				enemies[j][h] = 7;
+			}
+			
+			
+			
+			if (h == 2)
+				enemies[j][h] = 1;
+		}
+		if (j == 8 || j == 16 || j == 25){
+			l = 1;
+		}
+	}
+}
 
 void delay(int n) 
-{ 
+{
     // Tempo inicial
     clock_t start_time = clock(); 
   
@@ -56,34 +97,24 @@ void showMap(int x, int y){
 			}
 			
 			//############ RESERVADO PARA AS NAVES/BOSS ############
-			if (j>4 && j%5==0 && i==5){
-				if (c>10) printf(" ");
-					else printf("T");
-				c++;
+			int e = 0;
+			int a = 0;
+			for (e = 0; e <= NUMBER_OF_ENEMIES; e++){
+				if (enemies[e][1] == i){
+					if (enemies[e][0] == j){
+						printf("T");
+						a = 1;
+					}
+				}
+			}
+			if (a == 1) {
+				a = 0;
 				continue;
 			}
 
-			if (j>4 && (j-2)%5 ==0 && i==3){
-				if (c>7) printf(" ");
-					else printf("T");
-				c++;
-				continue;
-			}
-
-
-			if (j>4 && (j-2)%5 ==0 && i==7){
-				if (c>7) printf(" ");
-					else printf("T");
-				c++;
-				continue;
-			}
-			
 			if (j == x && i == y){
-				printf("O");
+					printf("O");
 			}
-			
-			
-			
 			
 			
 			
@@ -109,10 +140,12 @@ void main() {
 	int y = WIDTH - 3;
 	int x = LENGTH / 2;
 	
+	fillEnemies();
+	
 	setConsoleSize();
 	
 	while (true){
-		delay(300); // Paa os sons.
+		delay(300); // Para os sons.
 		system("cls"); // Para limpar o showMap anterior
 		showMap(x, y); // O showMap com as coordenadas do jogador.
 		Beep(4000, 300); // Para fazer sons!
