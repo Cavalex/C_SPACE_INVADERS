@@ -7,27 +7,34 @@
 // Esta era para o caso de termos grÃ¡ficos no jogo.
 //#include <graphics.h>
 
-int WIDTH = 20;
-int LENGTH = 100;
+int WIDTH = 40;
+int LENGTH = 50;
 
 // FunÃ§Ã£o que encontrei para mudar o tamanho da consola.
 // Para mudar o tamanho mexam nas variÃ¡veis em cima, podem ignorar o cÃ³digo dentro desta funÃ§Ã£o.
 void setConsoleSize(){
 	HANDLE wHnd;    // Handle to write to the console.
+	HANDLE rHnd;    // Handle to read from the console.
 	
 	wHnd = GetStdHandle(STD_OUTPUT_HANDLE);
+    rHnd = GetStdHandle(STD_INPUT_HANDLE);
     // Change the window title:
     SetConsoleTitle("Space Invaders!");
     // Set up the required window size:
     SMALL_RECT windowSize = {0, 0, LENGTH, WIDTH};
     SetConsoleWindowInfo(wHnd, 1, &windowSize);
+    // Change the console window size:
+    // Create a COORD to hold the buffer size:
+    COORD bufferSize = {10, 10};
+    SetConsoleScreenBufferSize(wHnd, bufferSize);
 }
 
 // Esta funÃ§Ã£o vai ser a mais importante para o jogo.
 void showMap(){
-	int i, j;
+	int i, j, c;
 	// Desenhar o mapa
 	for(i = 0; i < WIDTH; i++){
+		c = 0;
 		for(j = 0; j < LENGTH; j++){
 			
 			// Desenhar a parte de cima
@@ -48,7 +55,6 @@ void showMap(){
 					else printf("T");
 				c++;
 				continue;
-				
 			}
 
 			if (j>23 && (j-2)%5 ==0 && i==3){
@@ -56,15 +62,21 @@ void showMap(){
 					else printf("T");
 				c++;
 				continue;
-				
 			}
+			
 			if (j>23 && (j-2)%5 ==0 && i==7){
 				if (c>9) printf(" ");
 					else printf("T");
 				c++;
 				continue;
-				
 			}
+			
+			
+			
+			
+			
+			
+			
 			else{
 				printf(" ");
 			}
