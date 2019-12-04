@@ -13,10 +13,11 @@ int LENGTH = 50;
 
 void delay(int n) 
 { 
-    // Stroing start time 
+    // Tempo inicial
     clock_t start_time = clock(); 
   
-    // looping till required time is not acheived 
+    // Uma espécie de sleep, a função delay só acaba quando o while terminar,
+    //logo só termina quando se passar o tempo que colocamos no parâmetro.
     while (clock() < start_time + n) 
         ; 
 }
@@ -103,7 +104,7 @@ int getRandomNumber(int min, int max){
 	return r;
 }
 
-int main() {
+void main() {
 	
 	int y = WIDTH - 3;
 	int x = LENGTH / 2;
@@ -111,11 +112,9 @@ int main() {
 	setConsoleSize();
 	
 	while (true){
-		delay(300);
-		system("cls");
-		//clear();
-		showMap(x, y);
+		delay(300); // Paa os sons.
+		system("cls"); // Para limpar o showMap anterior
+		showMap(x, y); // O showMap com as coordenadas do jogador.
 		Beep(4000, 300); // Para fazer sons!
 	}
-	return 0;
 }
