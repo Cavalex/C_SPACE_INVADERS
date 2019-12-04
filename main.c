@@ -4,29 +4,34 @@
 #include <time.h> 
 #include <stdbool.h>
 
+
 // Esta era para o caso de termos grÃ¡ficos no jogo.
 //#include <graphics.h>
 
-int WIDTH = 40;
+int WIDTH = 30;
 int LENGTH = 50;
+
+void delay(int n) 
+{ 
+    // Stroing start time 
+    clock_t start_time = clock(); 
+  
+    // looping till required time is not acheived 
+    while (clock() < start_time + n) 
+        ; 
+}
 
 // FunÃ§Ã£o que encontrei para mudar o tamanho da consola.
 // Para mudar o tamanho mexam nas variÃ¡veis em cima, podem ignorar o cÃ³digo dentro desta funÃ§Ã£o.
 void setConsoleSize(){
 	HANDLE wHnd;    // Handle to write to the console.
-	HANDLE rHnd;    // Handle to read from the console.
 	
 	wHnd = GetStdHandle(STD_OUTPUT_HANDLE);
-    rHnd = GetStdHandle(STD_INPUT_HANDLE);
     // Change the window title:
     SetConsoleTitle("Space Invaders!");
     // Set up the required window size:
     SMALL_RECT windowSize = {0, 0, LENGTH, WIDTH};
     SetConsoleWindowInfo(wHnd, 1, &windowSize);
-    // Change the console window size:
-    // Create a COORD to hold the buffer size:
-    COORD bufferSize = {10, 10};
-    SetConsoleScreenBufferSize(wHnd, bufferSize);
 }
 
 // Esta funÃ§Ã£o vai ser a mais importante para o jogo.
@@ -50,22 +55,23 @@ void showMap(){
 			}
 			
 			//############ RESERVADO PARA AS NAVES/BOSS ############
-			if (j>23 && j%5==0 && i==5){
+			if (j>4 && j%5==0 && i==5){
 				if (c>10) printf(" ");
 					else printf("T");
 				c++;
 				continue;
 			}
 
-			if (j>23 && (j-2)%5 ==0 && i==3){
-				if (c>9) printf(" ");
+			if (j>4 && (j-2)%5 ==0 && i==3){
+				if (c>7) printf(" ");
 					else printf("T");
 				c++;
 				continue;
 			}
-			
-			if (j>23 && (j-2)%5 ==0 && i==7){
-				if (c>9) printf(" ");
+
+
+			if (j>4 && (j-2)%5 ==0 && i==7){
+				if (c>7) printf(" ");
 					else printf("T");
 				c++;
 				continue;
@@ -102,9 +108,11 @@ int main() {
 	setConsoleSize();
 	
 	while (true){
+		delay(300);
+		system("cls");
+		//clear();
 		showMap();
 		Beep(4000, 300); // Para fazer sons!
-		sleep(10000); // Para para o programa
 	}
 	return 0;
 }
