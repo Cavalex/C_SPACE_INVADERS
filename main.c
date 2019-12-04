@@ -7,7 +7,7 @@
 // Esta era para o caso de termos grÃ¡ficos no jogo.
 //#include <graphics.h>
 
-int WIDTH = 40;
+int WIDTH = 30;
 int LENGTH = 50;
 
 // FunÃ§Ã£o que encontrei para mudar o tamanho da consola.
@@ -50,22 +50,22 @@ void showMap(){
 			}
 			
 			//############ RESERVADO PARA AS NAVES/BOSS ############
-			if (j>23 && j%5==0 && i==5){
+			if (j>4 && j%5==0 && i==5){
 				if (c>10) printf(" ");
 					else printf("T");
 				c++;
 				continue;
 			}
 
-			if (j>23 && (j-2)%5 ==0 && i==3){
-				if (c>9) printf(" ");
+			if (j>4 && (j-2)%5 ==0 && i==3){
+				if (c>7) printf(" ");
 					else printf("T");
 				c++;
 				continue;
 			}
 			
-			if (j>23 && (j-2)%5 ==0 && i==7){
-				if (c>9) printf(" ");
+			if (j>4 && (j-2)%5 ==0 && i==7){
+				if (c>7) printf(" ");
 					else printf("T");
 				c++;
 				continue;
@@ -103,7 +103,7 @@ int main() {
 	
 	while (true){
 		showMap();
-		Beep(4000, 300); // Para fazer sons!
+		//Beep(4000, 300); // Para fazer sons!
 		sleep(10000); // Para para o programa
 	}
 	return 0;
