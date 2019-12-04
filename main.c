@@ -35,7 +35,7 @@ void setConsoleSize(){
 }
 
 // Esta funÃ§Ã£o vai ser a mais importante para o jogo.
-void showMap(){
+void showMap(int x, int y){
 	int i, j, c;
 	// Desenhar o mapa
 	for(i = 0; i < WIDTH; i++){
@@ -77,6 +77,9 @@ void showMap(){
 				continue;
 			}
 			
+			if (j == x && i == y){
+				printf("O");
+			}
 			
 			
 			
@@ -102,8 +105,8 @@ int getRandomNumber(int min, int max){
 
 int main() {
 	
-	int x;
-	int y;
+	int y = WIDTH - 3;
+	int x = LENGTH / 2;
 	
 	setConsoleSize();
 	
@@ -111,7 +114,7 @@ int main() {
 		delay(300);
 		system("cls");
 		//clear();
-		showMap();
+		showMap(x, y);
 		Beep(4000, 300); // Para fazer sons!
 	}
 	return 0;
