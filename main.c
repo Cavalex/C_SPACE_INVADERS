@@ -7,9 +7,10 @@
 
 #define NUMBER_OF_ENEMIES 25
 #define ARRAY_LENGTH 3
-#define WIDTH 30
+#define WIDTH 20
 #define LENGTH 50
 
+int missile[] = {0, 0, 0};
 int enemies[NUMBER_OF_ENEMIES][ARRAY_LENGTH];
 
 void fillEnemies(){
@@ -52,15 +53,15 @@ void fillEnemies(){
 	}
 }
 
-void delay(int n) 
+void timer(int n) 
 {
     // Tempo inicial
     clock_t start_time = clock(); 
   
-    // Uma espécie de sleep, a função delay só acaba quando o while terminar,
+    // Uma espécie de sleep, a função timer só acaba quando o while terminar,
     //logo só termina quando se passar o tempo que colocamos no parâmetro.
     while (clock() < start_time + n) 
-        ; 
+		;
 }
 
 // FunÃ§Ã£o que encontrei para mudar o tamanho da consola.
@@ -113,10 +114,22 @@ void showMap(int x, int y){
 			}
 
 			if (j == x && i == y){
-					printf("O");
+				printf("A");
+				continue;
 			}
 			
-			
+			if (missile[2] == 1){
+				if (j == missile[0] && i == missile[1]){
+					printf("^");
+				}
+				else{
+					printf(" ");
+				}
+				
+				if (i == missile[1] && i <= 1){
+					missile[2] = 0;
+				}
+			}
 			
 			else{
 				printf(" ");
@@ -137,17 +150,48 @@ int getRandomNumber(int min, int max){
 
 void main() {
 	
+	char move;
+	
 	int y = WIDTH - 3;
 	int x = LENGTH / 2;
+	
+	// Coordenadas do missil
+	int mY;
+	int mX;
 	
 	fillEnemies();
 	
 	setConsoleSize();
 	
 	while (true){
-		delay(300); // Para os sons.
 		system("cls"); // Para limpar o showMap anterior
 		showMap(x, y); // O showMap com as coordenadas do jogador.
-		Beep(4000, 300); // Para fazer sons!
+		
+		// Movimento do jogador
+    	if (kbhit()){
+    		move = getch();
+		}
+    	if (move == 75 && x != 1){
+			x -= 1;
+		}
+		if (move == 77 && x != LENGTH - 1){
+			x += 1;
+		}
+		
+		// Quando carregamos no "UP", o "missile" fica true e é atualizado no showMap
+		if (move == 72 && missile[2] != 1){
+			missile[2] = 1;
+			missile[1] = y - 1;
+			missile[0] = x;
+			Beep(4000, 300);
+		}
+		
+		if(missile[2] == 1){
+			missile[1] -= 1;
+		}
+		
+		move = 0;
+		timer(10); // Para os sons.
+		//Beep(4000, 300); // Para fazer sons!
 	}
 }
