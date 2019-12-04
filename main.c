@@ -3,36 +3,27 @@
 #include <windows.h>
 #include <time.h> 
 #include <stdbool.h>
-#include <dos.h>
-//#include <iostream>
-#include <conio.h>
 
-// Esta era para o caso de termos gráficos no jogo.
+// Esta era para o caso de termos grÃ¡ficos no jogo.
 //#include <graphics.h>
 
-int WIDTH = 30;
+int WIDTH = 20;
 int LENGTH = 100;
 
-// Função que encontrei para mudar o tamanho da consola.
-// Para mudar o tamanho mexam nas variáveis em cima, podem ignorar o código dentro desta função.
+// FunÃ§Ã£o que encontrei para mudar o tamanho da consola.
+// Para mudar o tamanho mexam nas variÃ¡veis em cima, podem ignorar o cÃ³digo dentro desta funÃ§Ã£o.
 void setConsoleSize(){
 	HANDLE wHnd;    // Handle to write to the console.
-	HANDLE rHnd;    // Handle to read from the console.
 	
 	wHnd = GetStdHandle(STD_OUTPUT_HANDLE);
-    rHnd = GetStdHandle(STD_INPUT_HANDLE);
     // Change the window title:
     SetConsoleTitle("Space Invaders!");
     // Set up the required window size:
     SMALL_RECT windowSize = {0, 0, LENGTH, WIDTH};
     SetConsoleWindowInfo(wHnd, 1, &windowSize);
-    // Change the console window size:
-    // Create a COORD to hold the buffer size:
-    COORD bufferSize = {10, 10};
-    SetConsoleScreenBufferSize(wHnd, bufferSize);
 }
 
-// Esta função vai ser a mais importante para o jogo.
+// Esta funÃ§Ã£o vai ser a mais importante para o jogo.
 void showMap(){
 	int i, j;
 	// Desenhar o mapa
@@ -65,10 +56,10 @@ void showMap(){
 	}
 }
 
-// Só para ser mais rápido arranjar um número aleatório.
+// SÃ³ para ser mais rÃ¡pido arranjar um nÃºmero aleatÃ³rio.
 int getRandomNumber(int min, int max){
 	
-	// um número aleatório entre 0 e a
+	// um nÃºmero aleatÃ³rio entre 0 e a
 	int r = (rand() % (max + 1 - min)) + min;
 
 	return r;
