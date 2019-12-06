@@ -101,7 +101,7 @@ void showMap(int x, int y){
 			
 			//############ RESERVADO PARA AS NAVES/BOSS ############
 			int e = 0;
-			int a = 0;
+			int a = 0; // Para poder desenhar os espaços depois de desenhar os inimigos.
 			for (e = 0; e <= NUMBER_OF_ENEMIES; e++){
 				if (enemies[e][2] == 1){
 					if (enemies[e][1] == i){
@@ -115,6 +115,15 @@ void showMap(int x, int y){
 					if (enemies[e][1] == i){
 						if (enemies[e][0] == j){
 							printf("X");
+							a = 1;
+							tick -= 1;
+						}
+					}
+				}
+				else if (enemies[e][2] == 0){
+					if (enemies[e][1] == i){
+						if (enemies[e][0] == j){
+							printf(" ");
 							a = 1;
 							tick -= 1;
 						}
@@ -165,9 +174,9 @@ void main() {
 	
 	int tick = 0;
 	int i = 0;
-	int highestX = 0;
+	int highestX = 0; // O que está mais à esquerda ou mais à direita
 	
-	int velocity = -1;
+	int velocity = -1; // A velocidade dos inimigos
 	
 	char move;
 	
@@ -221,6 +230,8 @@ void main() {
 			}
 			// Loop dos inimigos.
 			for (i = 0; i < NUMBER_OF_ENEMIES; i++){
+				if(enemies[i][2] == 3)
+					enemies[i][2] = 0;
 				// Movimento
 				if (velocity < 0 ){
 					if (enemies[i][0] < highestX)
@@ -234,16 +245,21 @@ void main() {
 					enemies[i][1] += 1;
 				}
 				enemies[i][0] += velocity;
-				
-				// Colisão
-				if(missile[0] == enemies[i][0] && missile[1] == enemies[i][1]){
-					enemies[i][2] = 2; // Para colocar um X
-					SCORE += 100; // Para aumentar o score
-					missile[2] = 0;
-				}
 			}
 			changeY = 0;
 		}
+		int e = 0;
+		for (e = 0; e < NUMBER_OF_ENEMIES; e++){
+			// Colisão MISSIL-INIMIGO
+			if(missile[0] == enemies[e][0] && missile[1] == enemies[e][1] && enemies[e][2] == 1){
+				enemies[e][2] = 2; // Para colocar um X
+				SCORE += 100; // Para aumentar o score
+				missile[2] = 0;
+			}
+		}
+		
+		// COLISÃÕ MISSILINIMIGO-JOGADOR
+		// RESERVADO
 		
 		if(missile[2] == 1){
 			missile[1] -= 1;
