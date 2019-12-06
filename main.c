@@ -5,7 +5,7 @@
 #include <stdbool.h> // Para criar funções booleanas
 #include <conio.h>
 
-#define NUMBER_OF_ENEMIES 25
+#define NUMBER_OF_ENEMIES 24
 #define ARRAY_LENGTH 3
 #define WIDTH 20
 #define LENGTH 50
@@ -24,10 +24,10 @@ void fillEnemies(){
 			if (h == 0 && j < 8){
 				enemies[j][h] = l;
 			}
-			if (h == 0 && j >= 8 && j <= 17){
-				enemies[j][h] = (l - 2);
+			if (h == 0 && j >= 8 && j < 16){
+				enemies[j][h] = l; // l- 2
 			}
-			if (h == 0 && j > 16 && j <= 25){
+			if (h == 0 && j >= 16 && j < 24){
 				enemies[j][h] = l;
 			}
 			
@@ -35,19 +35,18 @@ void fillEnemies(){
 			if (h == 1 && j < 8){
 				enemies[j][h] = 3;
 			}
-			if (h == 1 && j >= 8 && j <= 17){
+			if (h == 1 && j >= 8 && j < 16){
 				enemies[j][h] = 5;
 			}
-			if (h == 1 && j > 16 && j <= 25){
+			if (h == 1 && j >= 16 && j < 24){
 				enemies[j][h] = 7;
 			}
 			
-			
-			
+			// Preencher o estado de cada monstro/nave
 			if (h == 2)
 				enemies[j][h] = 1;
 		}
-		if (j == 8 || j == 16 || j == 25){
+		if (j == 7 || j == 15 || j == 23){
 			l = 1;
 		}
 	}
@@ -150,7 +149,15 @@ int getRandomNumber(int min, int max){
 
 void main() {
 	
+	int tick = 0;
+	int i = 0;
+	int highestX = 0;
+	
+	int velocity = -1;
+	
 	char move;
+	
+	int loop_enemy = 0;
 	
 	int y = WIDTH - 3;
 	int x = LENGTH / 2;
@@ -163,6 +170,7 @@ void main() {
 	
 	setConsoleSize();
 	
+	// Game loop
 	while (true){
 		system("cls"); // Para limpar o showMap anterior
 		showMap(x, y); // O showMap com as coordenadas do jogador.
@@ -183,7 +191,36 @@ void main() {
 			missile[2] = 1;
 			missile[1] = y - 1;
 			missile[0] = x;
-			Beep(4000, 300);
+		}
+		
+		// Movimento dos Monstros
+		if (tick % 5 == 0){
+			bool changeY = false; // Para saber se muda o Y
+			if (enemies[highestX][0] <= 1 && velocity < 0){
+				changeY = true;
+				velocity = -velocity;
+				highestX = 0;
+			}
+			if (enemies[highestX][0] >= LENGTH - 2 && velocity > 0){
+				changeY = true;
+				velocity = -velocity;
+			}
+			// Loop dos inimigos.
+			for (i = 0; i < NUMBER_OF_ENEMIES; i++){
+				if (velocity < 0 ){
+					if (enemies[i][0] < highestX)
+						highestX = i;
+				}
+				if (velocity > 0 ){
+					if (enemies[i][0] > highestX)
+						highestX = i;
+				}
+				if (changeY){
+					enemies[i][1] += 1;
+				}
+				enemies[i][0] += velocity;
+			}
+			changeY = 0;
 		}
 		
 		if(missile[2] == 1){
@@ -191,7 +228,9 @@ void main() {
 		}
 		
 		move = 0;
-		timer(10); // Para os sons.
+		timer(10); // Para o loop;
+		tick += 1;
 		//Beep(4000, 300); // Para fazer sons!
 	}
 }
+
