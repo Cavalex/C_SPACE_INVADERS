@@ -10,6 +10,8 @@
 #define WIDTH 20
 #define LENGTH 50
 
+int SCORE = 0;
+
 int missile[] = {0, 0, 0};
 int enemies[NUMBER_OF_ENEMIES][ARRAY_LENGTH];
 
@@ -79,6 +81,7 @@ void setConsoleSize(){
 // Esta funÃ§Ã£o vai ser a mais importante para o jogo.
 void showMap(int x, int y){
 	int i, j, c;
+	int tick = 5;
 	// Desenhar o mapa
 	for(i = 0; i < WIDTH; i++){
 		c = 0;
@@ -100,10 +103,21 @@ void showMap(int x, int y){
 			int e = 0;
 			int a = 0;
 			for (e = 0; e <= NUMBER_OF_ENEMIES; e++){
-				if (enemies[e][1] == i){
-					if (enemies[e][0] == j){
-						printf("T");
-						a = 1;
+				if (enemies[e][2] == 1){
+					if (enemies[e][1] == i){
+						if (enemies[e][0] == j){
+							printf("T");
+							a = 1;
+						}
+					}
+				}
+				else if (enemies[e][2] == 2){
+					if (enemies[e][1] == i){
+						if (enemies[e][0] == j){
+							printf("X");
+							a = 1;
+							tick -= 1;
+						}
 					}
 				}
 			}
@@ -193,7 +207,7 @@ void main() {
 			missile[0] = x;
 		}
 		
-		// Movimento dos Monstros
+		// ALIENS
 		if (tick % 5 == 0){
 			bool changeY = false; // Para saber se muda o Y
 			if (enemies[highestX][0] <= 1 && velocity < 0){
@@ -207,6 +221,7 @@ void main() {
 			}
 			// Loop dos inimigos.
 			for (i = 0; i < NUMBER_OF_ENEMIES; i++){
+				// Movimento
 				if (velocity < 0 ){
 					if (enemies[i][0] < highestX)
 						highestX = i;
@@ -219,6 +234,13 @@ void main() {
 					enemies[i][1] += 1;
 				}
 				enemies[i][0] += velocity;
+				
+				// Colisão
+				if(missile[0] == enemies[i][0] && missile[1] == enemies[i][1]){
+					enemies[i][2] = 2; // Para colocar um X
+					SCORE += 100; // Para aumentar o score
+					missile[2] = 0;
+				}
 			}
 			changeY = 0;
 		}
