@@ -11,10 +11,10 @@
 #define ALTURA 20
 #define COMPRIMENTO 50
 
-#define Y_PLAYER (ALTURA - 3)
+#define Y_PLAYER (ALTURA - 2)
 
 int map[COMPRIMENTO][ALTURA];
-
+bool GAME_OVER = false;
 int velocity = -1; // A velocidade dos inimigos
 int SCORE = 0;
 int MAX_SHOTS = 4;
@@ -139,6 +139,10 @@ void showMap(int new_xP, int old_xP){
 	for (y = 0; y < ALTURA; y++){
 		for (x = 0; x < COMPRIMENTO; x++){
 			
+			if (y >= ALTURA - 1 && (map[x][y] == 10 || map[x][y] == 11 || map[x][y] == 12 || map[x][y] == 13 || map[x][y] == 14 )){
+				GAME_OVER = true;
+			}
+			
 			// Movimento lateral
 			if (map[x][y] == 14){
 				if (velocity < 0){
@@ -203,13 +207,36 @@ void showMap(int new_xP, int old_xP){
 				default: printf("%d", map[x][y]); break;
 			}
 			
+			// Passar de X para Espaço Vazio
 			if(map[x][y] == 6){
 				map[x][y] = 1;
 			}
 			
 			// Atualização do missil inimigo
+			if(map[x][y] == 5){
+				if (map[x][y+1] == 2){
+					GAME_OVER = true;
+					map[x][y] = 1;
+				}
+				else if (y >= ALTURA - 1){
+					map[x][y] = 1;
+				}
+				else{
+					map[x][y+1] = 5;
+					map[x][y] = 1;
+				}
+				map[x][y] = 1;
+			}
+		
+			// Spawn Missil Inimigo
+			if (map[x][y] == 10 || map[x][y] == 11 || map[x][y] == 12 || map[x][y] == 13 || map[x][y] == 14 ){
+				int r = getRandomNumber(1, 15);
+				if (r == 1){
+					map[x][y+1] = 5; 
+				}
+			}
 			
-			// Atualização do missil
+			// Atualização do missil do jogador
 			if(map[x][y] == 4){
 				if (map[x][y-1] == 10 || map[x][y-1] == 11 || map[x][y-1] == 12 || map[x][y-1] == 13 || map[x][y-1] == 14){
 					map[x][y-1] = 6;
@@ -240,7 +267,7 @@ int getRandomNumber(int min, int max){
 	return r;
 }
 
-void main() {
+void main(){
 	
 	int tick = 0;
 	int i = 0;
@@ -264,6 +291,11 @@ void main() {
 		system("cls"); // Para limpar o showMap anterior
 		//showMap(x, y); // O showMap com as coordenadas do jogador.
 		showMap(x, old_x);
+		if (GAME_OVER){
+			system("cls");
+			printf("GAME OVER!!!"); // MESNAGEM DE GAME OVER
+			break;
+		}
 		
 		// Movimento do jogador
     	if (kbhit()){
@@ -278,7 +310,6 @@ void main() {
 			x += 1;
 		}
 		
-		
 		// Quando carregamos no "UP", o "missile" fica true e é atualizado no showMap
 		if (move == 72){
 			if (!(shots >= MAX_SHOTS)){
@@ -286,14 +317,10 @@ void main() {
 			}
 		}
 		
-		// COLISÃO MISSILINIMIGO-JOGADOR
-		// RESERVADO
-		
 		move = 0;
 		timer(10); // Para o loop;
 		tick += 1;
-		printf("%d", shots);
+		printf("%d", shots); // Teste
 		//Beep(4000, 300); // Para fazer sons!
 	}
 }
-
