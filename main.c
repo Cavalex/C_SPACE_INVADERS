@@ -7,7 +7,7 @@
 
 #define NUMBER_OF_ENEMIES 24
 #define ARRAY_COMPRIMENTO 3
-#define ALTURA 20
+#define ALTURA 21
 #define COMPRIMENTO 50
 #define Y_PLAYER (ALTURA - 2)
 bool GAME_OVER = false;
@@ -90,6 +90,7 @@ void game(){
 					continue;
 				}
 				
+				// Preencher inimigos
 				int a = 0;
 				for (e = 0; e <= NUMBER_OF_ENEMIES; e++){
 					if (enemies[e][2] == 1){
@@ -109,6 +110,11 @@ void game(){
 				if (x == x2 && y == y2){
 					map[x][y] = 2;
 					continue;
+				}
+				
+				// Fazer barreiras
+				if ((x == 6 || x == 7 || x == 16 || x == 17 || x == 26 || x == 27 || x == 36 || x == 37 ) && (y == Y_PLAYER - 2 || y == Y_PLAYER - 3)){
+					map[x][y] = 9;
 				}
 				
 				else{
@@ -159,6 +165,12 @@ void game(){
 				}
 				
 				if ((map[x][y] == 13 && x <= 2) || (map[x][y] == 13 && x >= COMPRIMENTO - 3)){
+					if (map[x-1][y] == 9){
+						map[x-1][y] = 1;
+					}
+					if (map[x+1][y] == 9){
+						map[x+1][y] = 1;
+					}
 					// MUDAR DE LINHA
 					if (velocity < 0 && x <= 2){
 						changeY = true;
@@ -195,22 +207,21 @@ void game(){
 					switch(map[x][y]){
 						// Casos normais que duram 1 tick
 						case 0: printf("#"); break; // BARREIRA
-						case 1: printf("%c", 176); break; // ESPAÇO
+						case 1: printf(" "); break; // ESPAÇO
 						case 2: printf("A"); break; // JOGADOR
 						case 4: printf("^"); break; // MISSIL JOGADOR
 						case 5: 
 							if(map[x][y-1] == 7){
-								printf("%c", 176);
+								printf(" ");
 							}
 							else{
 								printf("|");
 							}
 							break; // MISSIL INIMIGO
 						case 6: printf("X"); break; // EXPLOSION
-						//case 7: printf("|"); break; 
-						
-						case 7: printf("%c", 176); break; // CASO ESPECIAL DO MISSIL INIMIGO
+						case 7: printf(" "); break; // CASO ESPECIAL DO MISSIL INIMIGO
 						case 8: printf("%c", 209); break; // CASO ESPECIAL MISSIL-INIMIGO EM CIMA DE INIMIGO
+						case 9: printf("%c", 233); break; // BARREIRA
 						
 						// INIMIGOS
 						case 10: printf("%c", 209); map[x][y] += 1; break;
@@ -247,14 +258,19 @@ void game(){
 				// temos que nos certificar que ele não escreveu já um "|", logo criamos um caso especial,
 				// o 7, que dá "track" ao movimento do tiro.
 				if(map[x][y] == 5){
-					// Se acerta no jogador 1
+					// 1 Se acerta no jogador
 					if (map[x][y+1] == 2){
 						printMap();
-						GAME_OVER = true;
+						if(VIDAS == 0){
+							GAME_OVER = true;
+						}
+						else{
+							VIDAS -= 1;
+						}
 						map[x][y-1] = 1;
 					}
-					// Se acerta no jogador 2
-					if (map[x][y] == 2){
+					// 2 Se acerta no jogador
+					else if (map[x][y] == 2){
 						printMap();
 						GAME_OVER = true;
 						map[x][y-1] = 1;
@@ -263,6 +279,10 @@ void game(){
 					else if (y >= ALTURA - 2){
 						map[x][y] = 1;
 						map[x][y-1] = 1;
+					}
+					else if (map[x][y+1] == 9){
+						map[x][y] = 1;
+						map[x][y+1] = 1;
 					}
 					// Se tem um espaço vazio à frente
 					else{
@@ -305,7 +325,6 @@ void game(){
 	
 	// SÃ³ para ser mais rÃ¡pido arranjar um nÃºmero aleatÃ³rio.
 	int getRandomNumber(int min, int max){
-		
 		// um nÃºmero aleatÃ³rio entre 0 e a
 		int r = (rand() % (max + 1 - min)) + min;
 	
@@ -344,7 +363,7 @@ void game(){
 				char nome[100];
 				system("cls");
 				printf("\n        GAME OVER!!!"); // MESNAGEM DE GAME OVER
-				printf("          PONTUACAO: %d", SCORE);
+				printf("         PONTUACAO: %d", SCORE);
 				printf("\n\n Qual e o seu nome? --> ");
 				gets(nome);
 				printf(" ");
@@ -394,14 +413,101 @@ void game(){
 	startGame();
 }
 
+void easterEggs()
+{
+	system("cls");
+	char * nada = "a";
+    char * string_1 = "Neve no cimo dos montes";
+    char * string_2 = "Parece sol ca de baixo.";
+    char * string_3 = "Tenho um sonho de quem quero";
+    char * string_4 = "Mas se a procuro nao acho.";
+    printf("                                  /   \\ \n");
+    printf(" _                        )      ((   ))     (\n");
+    printf("(@)                      /|\\      ))_((     /|\\ \n");
+    printf("|-|                     / | \\    (/\\|/\\)   / | \\                      (@)\n");
+    printf("| | -------------------/--|-voV---\\`|'/--Vov-|--\\---------------------|-|\n");
+    printf("|-|                         '^`   (o o)  '^`                          | |\n");
+    printf("| |                               `\\Y/'                               |-|\n");
+    printf("|-|                      %s                      | |\n", string_1);
+    printf("| |                      %s                      |-|\n", string_2);
+    printf("|-|                      %s                 | |\n", string_3);
+    printf("| |                      %s                   |-|\n", string_4);
+    printf("|_|___________________________________________________________________| |\n");
+    printf("(@)              l   /\\ /         ( (       \\ /\\   l                `\\|-|\n");
+    printf("                 l /   V           \\ \\       V   \\ l                  (@)\n");
+    printf("                 l/                _) )_          \\I\n");
+    printf("                                   `\\ /'\n");
+    printf("                                            \n");
+    printf("");
+    scanf("%s", &nada);
+    scanf("%s", &nada);
+    printf("What are you doing here? Go whine about the meaning of life with that poem...");
+    scanf("%s", &nada);
+    printf("Boy oh boy, you don't want to see my special pla- *ahem* dragon food... do you?");
+    scanf("%s", &nada);
+    printf("Are you still here? Really? Are you that bored?");
+    scanf("%s", &nada);
+    printf("Do you want me to show you the dragon food for you to stop bothering me?");
+    scanf("%s", &nada);
+    printf("Ok then I guess I'll show you my plans... but promise to not tell anyone you hearing me?");
+    scanf("%s", &nada);
+    printf("...WIP...");
+    printf("Press anything to go to the main menu: ");
+    scanf("%s", &nada);
+    main();
+}
+
+bool missed = false;
 void menu(){
-	int choice;
-	setConsoleSize(50, 100);
-	printf("SPACE INVADERS");
+	system("cls");
 	
+	if (missed){
+		printf("\n You missed the available numbers, try again.");
+		missed = false;
+	}
+	int choice;
+	setConsoleSize(30, 50);
+	printf("\n Initializing");
+	Sleep(450);
+	printf(".");
+	Sleep(350);
+	printf(".");
+	Sleep(350);
+	printf(".\n\n\n");
+	Sleep(350);
+	printf(" 1 --> SPACE INVADERS");
+	printf("\n 2 --> SETTINGS");
+	printf("\n 3 --> EXIT\n");
+	puts(""
+	"                       *     .--.\n"
+	"                            / /  `\n"
+	"           +               | |\n"
+	"                  '         \ \__,\n"
+	"              *          +   '--'  *\n"
+	"                  +   /\\\n"
+	"     +              .'  '.   *\n"
+	"            *      /======\\      +\n"
+	"                  ;:.  _   ;\n"
+	"                  |:. (_)  |\n"
+	"                  |:.  _   |\n"
+	"        +         |:. (_)  |          *\n"
+	"                  ;:.      ;\n"
+	"                .' \:.    / `.\n"
+	"               / .-'':._.'`-. \\\n"
+	"               |/    /||\\    \\|\n"
+	"             _..--\"\"\"````\"\"\"--..\n"
+	"       _.-'``                    ``'-._\n"
+	"     -'                                '-\n"
+	""
+	);
+
 	scanf("%d", &choice);
 	switch (choice){
-		case 1: game(); break;
+		case 1: game(); system("cls"); break;
+		//case 2: settings(); system("cls"); break;
+		//case 3: credits(); break;
+		case 4: easterEggs(); system("cls"); break;
+		default: missed = true; main(); break;
 	}
 }
 
