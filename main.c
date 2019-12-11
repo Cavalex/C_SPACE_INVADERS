@@ -17,7 +17,7 @@ int map[COMPRIMENTO][ALTURA];
 bool GAME_OVER = false;
 int velocity = -1; // A velocidade dos inimigos
 int SCORE = 0;
-int MAX_SHOTS = 4;
+int MAX_SHOTS = 5;
 int shots = 0;
 int enemies[NUMBER_OF_ENEMIES][ARRAY_COMPRIMENTO];
 
@@ -211,6 +211,7 @@ void showMap(int new_xP, int old_xP){
 					//case 7: printf("|"); break; 
 					
 					case 7: printf(" "); break; // CASO ESPECIAL DO MISSIL INIMIGO
+					case 8: printf("T"); break; // CASO ESPECIAL MISSIL-INIMIGO EM CIMA DE INIMIGO
 					
 					// INIMIGOS
 					case 10: printf("T"); map[x][y] += 1; break;
@@ -231,20 +232,29 @@ void showMap(int new_xP, int old_xP){
 			
 			// Spawn Missil Inimigo
 			if (map[x][y] == 10 || map[x][y] == 11 || map[x][y] == 12 || map[x][y] == 13 || map[x][y] == 14 ){
-				int r = getRandomNumber(1, 30);
-				if (r == 1){
-					map[x][y+1] = 5; 
+				if (!(map[x][y+2] == 10 || map[x][y+2] == 11 || map[x][y+2] == 12 || map[x][y+2] == 13 || map[x][y+2] == 14)){
+					if (!(map[x][y+4] == 10 || map[x][y+4] == 11 || map[x][y+4] == 12 || map[x][y+4] == 13 || map[x][y+4] == 14)){
+						int r = getRandomNumber(1, 30);
+						if (r == 1){
+							map[x][y+1] = 5; 
+						}
+					}
 				}
 			}
 			
 			// Atualização do missil inimigo
 			// Já que esta função atualiza de baixo para cima e o tiro tbm vai de baixo para cima, 
-			// temos que criar uma variável para não atualizar o espaço diretamente abaixo do tiro,
-			// e podemos fazer isso com a variável "skipShotX" e "skipShotY" que armazena as coordenadas para dar skip.
-			// Isto é para dar skip na mesma iteração dos loops!
+			// temos que nos certificar que ele não escreveu já um "|", logo criamos um caso especial,
+			// o 7, que dá "track" ao movimento do tiro.
 			if(map[x][y] == 5){
-				// Se acerta no jogador
+				// Se acerta no jogador 1
 				if (map[x][y+1] == 2){
+					printMap();
+					GAME_OVER = true;
+					map[x][y-1] = 1;
+				}
+				// Se acerta no jogador 2
+				if (map[x][y] == 2){
 					printMap();
 					GAME_OVER = true;
 					map[x][y-1] = 1;
@@ -268,14 +278,19 @@ void showMap(int new_xP, int old_xP){
 			
 			// Atualização do missil do jogador
 			if(map[x][y] == 4){
+				// Colisão
 				if (map[x][y-1] == 10 || map[x][y-1] == 11 || map[x][y-1] == 12 || map[x][y-1] == 13 || map[x][y-1] == 14){
 					map[x][y-1] = 6;
 					map[x][y] = 1;
+					// RESERVADO PARA DIFICULDADE
+					SCORE += 100;
 				}
+				// Limite
 				else if (y <= 1){
 					map[x][y] = 1;
 					shotss -= 1;
 				}
+				// Movimento
 				else{
 					shotss += 1;
 					map[x][y-1] = 4;
@@ -316,6 +331,8 @@ void main(){
 	
 	setConsoleSize();
 	
+	srand(time(NULL));
+	
 	// Game loop
 	while (true){
 		system("cls"); // Para limpar o showMap anterior
@@ -324,8 +341,16 @@ void main(){
 		
 		// GAME OVER
 		if (GAME_OVER){
+			char nome[100];
 			system("cls");
-			printf("GAME OVER!!!"); // MESNAGEM DE GAME OVER
+			printf("\n        GAME OVER!!!"); // MESNAGEM DE GAME OVER
+			printf("        YOUR SCORE: %d", SCORE);
+			printf("\n\n Qual é o seu nome? --> ");
+			gets(nome);
+			printf(" ");
+			puts(nome);
+			// Espaço para a leaderboard
+			
 			Sleep(2000);
 			break;
 		}
@@ -353,7 +378,7 @@ void main(){
 		move = 0;
 		timer(10); // Para o loop;
 		tick += 1;
-		printf("%d", shots); // Teste
+		printf("SCORE --> %d", SCORE); // Teste
 		//Beep(4000, 300); // Para fazer sons!
 	}
 }
