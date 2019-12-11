@@ -195,12 +195,12 @@ void game(){
 					switch(map[x][y]){
 						// Casos normais que duram 1 tick
 						case 0: printf("#"); break; // BARREIRA
-						case 1: printf(" "); break; // ESPAÇO
+						case 1: printf("%c", 176); break; // ESPAÇO
 						case 2: printf("A"); break; // JOGADOR
 						case 4: printf("^"); break; // MISSIL JOGADOR
 						case 5: 
 							if(map[x][y-1] == 7){
-								printf(" ");
+								printf("%c", 176);
 							}
 							else{
 								printf("|");
@@ -209,7 +209,7 @@ void game(){
 						case 6: printf("X"); break; // EXPLOSION
 						//case 7: printf("|"); break; 
 						
-						case 7: printf(" "); break; // CASO ESPECIAL DO MISSIL INIMIGO
+						case 7: printf("%c", 176); break; // CASO ESPECIAL DO MISSIL INIMIGO
 						case 8: printf("%c", 209); break; // CASO ESPECIAL MISSIL-INIMIGO EM CIMA DE INIMIGO
 						
 						// INIMIGOS
