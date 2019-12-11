@@ -233,7 +233,8 @@ void game(){
 				if (map[x][y] == 10 || map[x][y] == 11 || map[x][y] == 12 || map[x][y] == 13 || map[x][y] == 14 ){
 					if (!(map[x][y+2] == 10 || map[x][y+2] == 11 || map[x][y+2] == 12 || map[x][y+2] == 13 || map[x][y+2] == 14)){
 						if (!(map[x][y+4] == 10 || map[x][y+4] == 11 || map[x][y+4] == 12 || map[x][y+4] == 13 || map[x][y+4] == 14)){
-							int r = getRandomNumber(1, 30);
+							//int r = getRandomNumber(1, 30);
+							int r = (rand() % (30 + 1 - 1)) + 1;
 							if (r == 1){
 								map[x][y+1] = 5; 
 							}
