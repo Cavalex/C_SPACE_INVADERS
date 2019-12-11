@@ -103,7 +103,7 @@ void fillMap(int x2, int y2){
 				map[x][y] = 1;
 			}
 		}
-		printf("");;
+		printf("");
 	}
 }
 
@@ -132,6 +132,10 @@ void setConsoleSize(){
 
 void showMap(int new_xP, int old_xP){
 	bool changeY = false;
+	// Visto que não podemos somente declarar a variável sozinha (dá erro ao atualizar se a variável não tem valor)
+	// vamos colocar coordenadas que são impossíveis de obter, negativas.
+	int skipShotX = -100;
+	int skipShotY = -100;
 	int y = 0;
 	int x = 0;
 	int tick = 0;
@@ -188,51 +192,77 @@ void showMap(int new_xP, int old_xP){
 				map[x][y] = 1;
 			}
 			
-			switch(map[x][y]){
-				
-				case 0: printf("#"); break; // BARREIRA
-				case 1: printf(" "); break; // ESPAÇO
-				case 2: printf("A"); break; // JOGADOR
-				case 4: printf("^"); break; // MISSIL JOGADOR
-				case 5: printf("|"); break; // MISSIL INIMIGO
-				case 6: printf("X"); break; // EXPLOSION
-				
-				// INIMIGOS
-				case 10: printf("T"); map[x][y] += 1; break;
-				case 11: printf("T"); map[x][y] += 1; break;
-				case 12: printf("T"); map[x][y] += 1; break;
-				case 13: printf("T"); map[x][y] += 1; break;
-				
-				// RESERVADO
-				default: printf("%d", map[x][y]); break;
+			void printMap(){
+				switch(map[x][y]){
+					// Casos normais que duram 1 tick
+					case 0: printf("#"); break; // BARREIRA
+					case 1: printf(" "); break; // ESPAÇO
+					case 2: printf("A"); break; // JOGADOR
+					case 4: printf("^"); break; // MISSIL JOGADOR
+					case 5: 
+						if(map[x][y-1] == 7){
+							printf(" ");
+						}
+						else{
+							printf("|");
+						}
+						break; // MISSIL INIMIGO
+					case 6: printf("X"); break; // EXPLOSION
+					//case 7: printf("|"); break; 
+					
+					case 7: printf(" "); break; // CASO ESPECIAL DO MISSIL INIMIGO
+					
+					// INIMIGOS
+					case 10: printf("T"); map[x][y] += 1; break;
+					case 11: printf("T"); map[x][y] += 1; break;
+					case 12: printf("T"); map[x][y] += 1; break;
+					case 13: printf("T"); map[x][y] += 1; break;
+					
+					// RESERVADO
+					default: printf("%d", map[x][y]); break;
+				}
 			}
+			printMap();
 			
 			// Passar de X para Espaço Vazio
 			if(map[x][y] == 6){
 				map[x][y] = 1;
 			}
 			
-			// Atualização do missil inimigo
-			if(map[x][y] == 5){
-				if (map[x][y+1] == 2){
-					GAME_OVER = true;
-					map[x][y] = 1;
-				}
-				else if (y >= ALTURA - 1){
-					map[x][y] = 1;
-				}
-				else{
-					map[x][y+1] = 5;
-					map[x][y] = 1;
-				}
-				map[x][y] = 1;
-			}
-		
 			// Spawn Missil Inimigo
 			if (map[x][y] == 10 || map[x][y] == 11 || map[x][y] == 12 || map[x][y] == 13 || map[x][y] == 14 ){
-				int r = getRandomNumber(1, 15);
+				int r = getRandomNumber(1, 30);
 				if (r == 1){
 					map[x][y+1] = 5; 
+				}
+			}
+			
+			// Atualização do missil inimigo
+			// Já que esta função atualiza de baixo para cima e o tiro tbm vai de baixo para cima, 
+			// temos que criar uma variável para não atualizar o espaço diretamente abaixo do tiro,
+			// e podemos fazer isso com a variável "skipShotX" e "skipShotY" que armazena as coordenadas para dar skip.
+			// Isto é para dar skip na mesma iteração dos loops!
+			if(map[x][y] == 5){
+				// Se acerta no jogador
+				if (map[x][y+1] == 2){
+					printMap();
+					GAME_OVER = true;
+					map[x][y-1] = 1;
+				}
+				// Se bate na barreira
+				else if (y >= ALTURA - 2){
+					map[x][y] = 1;
+					map[x][y-1] = 1;
+				}
+				// Se tem um espaço vazio à frente
+				else{
+					if (!(map[x][y-1] == 7)){
+						map[x][y] = 7;
+						map[x][y+1] = 5;
+					}
+					else{
+						map[x][y-1] = 1;
+					}
 				}
 			}
 			
@@ -291,9 +321,12 @@ void main(){
 		system("cls"); // Para limpar o showMap anterior
 		//showMap(x, y); // O showMap com as coordenadas do jogador.
 		showMap(x, old_x);
+		
+		// GAME OVER
 		if (GAME_OVER){
 			system("cls");
 			printf("GAME OVER!!!"); // MESNAGEM DE GAME OVER
+			Sleep(2000);
 			break;
 		}
 		
@@ -301,16 +334,16 @@ void main(){
     	if (kbhit()){
     		move = getch();
 		}
-    	if (move == 75 && x != 1){
+    	if (move == 75 && x > 1){
     		old_x = x;
 			x -= 1;
 		}
-		if (move == 77 && x != COMPRIMENTO - 1){
+		if (move == 77 && x < COMPRIMENTO - 2){
 			old_x = x;
 			x += 1;
 		}
 		
-		// Quando carregamos no "UP", o "missile" fica true e é atualizado no showMap
+		// Quando carregamos no "UP", é lançado um míssil
 		if (move == 72){
 			if (!(shots >= MAX_SHOTS)){
 				map[x][Y_PLAYER-1] = 4;
