@@ -17,6 +17,7 @@ int velocity = -1; // A velocidade dos inimigos
 int SCORE = 0;
 int VIDAS = 3;
 int MAX_SHOTS = 5;
+int MAX_ROUNDS = 3;
 int shots = 0;
 int enemies[NUMBER_OF_ENEMIES][ARRAY_COMPRIMENTO];
 //bool invulnerability = true;
@@ -152,13 +153,13 @@ void game(){
 
 	void showMap(int new_xP, int old_xP){
 		bool changeY = false;
+		bool noEnemies = true;
 		// Visto que nÃ£o podemos somente declarar a variÃ¡vel sozinha (dÃ¡ erro ao atualizar se a variÃ¡vel nÃ£o tem valor)
 		// vamos colocar coordenadas que sÃ£o impossÃ­veis de obter, negativas.
 		int skipShotX = -100;
 		int skipShotY = -100;
 		int y = 0;
 		int x = 0;
-		int enemies = 0;
 		int shotss = 0;
 		for (y = 0; y < ALTURA; y++){
 			for (x = 0; x < COMPRIMENTO; x++){
@@ -168,9 +169,16 @@ void game(){
 					GAME_OVER = true;
 				}
 
+                // Perde-se o jogo quando os inimigos chegam ao chão
 				if (y >= ALTURA - 1 && (map[x][y] == 10 || map[x][y] == 11 || map[x][y] == 12 || map[x][y] == 13 || map[x][y] == 14 )){
 					GAME_OVER = true;
 				}
+
+                // Contagem de inimigos para saber se o jogo acabou ou não
+				// Se não há inimigos, noEnemies fica true e o jogo acaba, senão noEnemies fica false e continua o jogo
+				if ((map[x][y] == 10 || map[x][y] == 11 || map[x][y] == 12 || map[x][y] == 13 || map[x][y] == 14) && noEnemies == true)
+                    noEnemies = false;
+
 
 				// Movimento lateral
 				if (map[x][y] == 14){
@@ -183,10 +191,6 @@ void game(){
 						map[x][y] = 1;
 					}
 				}
-
-				// Contagem de inimigos para saber se o jogo acabou ou não
-				if (map[x][y] == 10 || map[x][y] == 11 || map[x][y] == 12 || map[x][y] == 13 || map[x][y] == 14)
-                    enemies += 1;
 
 				// CODIGO PARA A MUDANÇA DE LINHA
 				if ((map[x][y] == 13 && x <= 2) || (map[x][y] == 13 && x >= COMPRIMENTO - 3)){
@@ -253,6 +257,12 @@ void game(){
 						case 11: printf("%c", 209); map[x][y] += 1; break;
 						case 12: printf("%c", 209); map[x][y] += 1; break;
 						case 13: printf("%c", 209); map[x][y] += 1; break;
+
+						// BOSS
+						case 20: printf("/"); break;
+						case 21: printf("\""); break;
+						case 22: printf("\""); break;
+						case 23: printf("/"); break;
 
 						// RESERVADO
 						default: printf("%d", map[x][y]); break;
@@ -378,12 +388,12 @@ void game(){
 			printf("\n");
 		}
 		shots = shotss;
-		/*
-        if (enemies == 0){ // GANHASTE!
+
+        if (noEnemies){ // GANHASTE!
             GAME_OVER = true;
             WON_GAME = true;
         }
-        */
+        else noEnemies = true;
 	}
 
 	// SÃƒÂ³ para ser mais rÃƒÂ¡pido arranjar um nÃƒÂºmero aleatÃƒÂ³rio.
@@ -408,6 +418,8 @@ void game(){
 		int x = COMPRIMENTO / 2;
 		int old_x = x;
 
+		int rounds = 0;
+
 		fillEnemies();
 		fillMap(x, y);
 
@@ -423,30 +435,47 @@ void game(){
 
 			// GAME OVER
 			if (GAME_OVER){
-                // Isto aqui é só para fazer testes
-				//showM(map);
-				//Sleep(200000);
-				char nome[100];
-				system("cls");
-				// Depois é para eliminar isto!
-				if (VIDAS < 0){
-                    printf("ERRO VIDAS: %d!!!", VIDAS);
-				}
-				if (WON_GAME == true)
-                    printf("\n        GANHASTE!!!");
-                else
-                    printf("\n        PERDESTE!!!"); // MESNAGEM DE GAME OVER
-                Sleep(1000);
-				printf("         PONTUACAO: %d", SCORE);
-				printf("\n\n Qual e o seu nome? --> ");
-				//gets(nome);
-                // Queremos ter o scanf porque se houver algum tipo de erro ao acabar o jogo,
-				// como por exemplo spammar as teclas, não queremos que o nome do jogador fique "1".
-				//printf(" "); // ???
-				scanf("%s", nome);
-				// RESERVADO EspaÃ§o para a leaderboard
-				Sleep(2000);
-				break;
+                rounds += 1;
+                // Se o jogo já acabou:
+                if(rounds == MAX_ROUNDS){
+                    // Isto aqui é só para fazer testes
+                    //showM(map);
+                    //printf(noEnemies ? "true" : "false");
+                    //Sleep(200000);
+                    char nome[100];
+                    system("cls");
+                    // Depois é para eliminar isto!
+                    // RESERVADO ELIMINAR
+                    if (VIDAS < 0){
+                        printf("ERRO VIDAS: %d!!!", VIDAS);
+                    }
+                    if (WON_GAME == true)
+                        printf("\n        GANHASTE!!!");
+                    else
+                        printf("\n        PERDESTE!!!"); // MESNAGEM DE GAME OVER
+                    Sleep(1000);
+                    printf("         PONTUACAO: %d", SCORE);
+                    printf("\n\n Qual e o seu nome? --> ");
+                    //gets(nome);
+                    // Queremos ter o scanf porque se houver algum tipo de erro ao acabar o jogo,
+                    // como por exemplo spammar as teclas, não queremos que o nome do jogador fique "1".
+                    //printf(" "); // ???
+                    scanf("%s", nome);
+                    // RESERVADO EspaÃ§o para a leaderboard
+                    Sleep(2000);
+                    break;
+                }
+                // Se o jogo ainda não acabou
+                else {
+                    printf("    ROUND %d    ", rounds);
+                    // Para recomeçar o jogo
+                    y = Y_PLAYER;
+                    x = COMPRIMENTO / 2;
+                    fillMap(x, y);
+                    VIDAS = 3;
+                    GAME_OVER = false;
+                    Sleep(4000);
+                }
 			}
 
 			// Movimento do jogador
@@ -474,14 +503,15 @@ void game(){
 			//Sleep(10);
 			tick += 1;
 			if(VIDAS == 1){
-				printf("SCORE: %d     \t\t\t VIDAS:        <3", SCORE);
+				printf("SCORE: %d     \t\t\t VIDAS:  <3", SCORE);
 			}
 			else if (VIDAS == 2){
-				printf("SCORE: %d     \t\t\t VIDAS:     <3 <3", SCORE);
+				printf("SCORE: %d     \t\t\t VIDAS:  <3 <3", SCORE);
 			}
 			else if (VIDAS == 3){
 				printf("SCORE: %d     \t\t\t VIDAS:  <3 <3 <3", SCORE);
 			}
+			// RESERVADO ELIMINAR
 			else{
 				printf("ERRO VIDAS: %d!!!", VIDAS);
 				GAME_OVER = true;
