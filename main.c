@@ -18,6 +18,7 @@ int SCORE = 0;
 int VIDAS = 3;
 int MAX_SHOTS = 5;
 int MAX_ROUNDS = 3;
+int BOSS_HP = 10;
 int shots = 0;
 int enemies[NUMBER_OF_ENEMIES][ARRAY_COMPRIMENTO];
 //bool invulnerability = true;
@@ -95,12 +96,13 @@ void game(){
 		for (y = 0; y < ALTURA; y++){
 			for (x = 0; x < COMPRIMENTO; x++){
 
+                // Desenhar a parte de cima e de baixo
 				if(y == 0 || y == ALTURA - 1){
 					map[x][y] = 0;
 					continue;
 				}
 
-				// Desenhar a parte de baixo
+				// Desenhar a parte lateral
 				if(x == 0 || x == COMPRIMENTO - 1){
 					map[x][y] = 0;
 					continue;
@@ -123,6 +125,63 @@ void game(){
 					continue;
 				}
 
+                // O jogador
+				if (x == x2 && y == y2){
+					map[x][y] = 2;
+					continue;
+				}
+
+				// Fazer barreiras
+				if ((x == 6 || x == 7 || x == 16 || x == 17 || x == 26 || x == 27 || x == 36 || x == 37 ) && (y == Y_PLAYER - 2 || y == Y_PLAYER - 3)){
+					map[x][y] = 9;
+				}
+
+				else{
+					map[x][y] = 1;
+				}
+			}
+			printf("");
+		}
+	}
+
+    void fillMapBoss(int x2, int y2){
+		int x = 0;
+		int y = 0;
+		int e = 0;
+		for (y = 0; y < ALTURA; y++){
+			for (x = 0; x < COMPRIMENTO; x++){
+
+                // Desenhar a parte de cima e de baixo
+				if(y == 0 || y == ALTURA - 1){
+					map[x][y] = 0;
+					continue;
+				}
+
+				// Desenhar a parte lateral
+				if(x == 0 || x == COMPRIMENTO - 1){
+					map[x][y] = 0;
+					continue;
+				}
+
+                // O boss
+                if(x == COMPRIMENTO / 2 && y == 3){
+                    map[x][y] = 20;
+                    continue;
+                }
+                if(map[x - 1][y] == 20){
+                    map[x][y] = 21;
+                    continue;
+                }
+                if(map[x][y - 1] == 20){
+                    map[x][y] = 22;
+                    continue;
+                }
+                if(map[x - 1][y] == 22){
+                    map[x][y] = 23;
+                    continue;
+                }
+
+                // O jogador
 				if (x == x2 && y == y2){
 					map[x][y] = 2;
 					continue;
@@ -176,9 +235,8 @@ void game(){
 
                 // Contagem de inimigos para saber se o jogo acabou ou não
 				// Se não há inimigos, noEnemies fica true e o jogo acaba, senão noEnemies fica false e continua o jogo
-				if ((map[x][y] == 10 || map[x][y] == 11 || map[x][y] == 12 || map[x][y] == 13 || map[x][y] == 14) && noEnemies == true)
+				if ((map[x][y] == 10 || map[x][y] == 11 || map[x][y] == 12 || map[x][y] == 13 || map[x][y] == 14 || map[x][y] == 20 || map[x][y] == 24) && noEnemies == true)
                     noEnemies = false;
-
 
 				// Movimento lateral
 				if (map[x][y] == 14){
@@ -192,7 +250,49 @@ void game(){
 					}
 				}
 
-				// CODIGO PARA A MUDANÇA DE LINHA
+				// MUDAR DE LINHA - BOSS
+				if((map[x][y] == 24 && x <= 2 && velocity < 0) || (map[x][y] == 25 && x >= COMPRIMENTO - 3 && velocity > 0)){
+                    if (map[x][y] == 24 && velocity < 0){ // Temos de apagar o de cima e mov»e-lo para baixo
+                        map[x][y] = 1;
+                        map[x+1][y] = 1;
+                        map[x][y+1] = 20;
+                        map[x+1][y+1] = 21;
+                        map[x][y+2] = 22;
+                        map[x+1][y+2] = 23;
+                    }
+                    if (map[x][y] == 25 && velocity > 0){
+                        map[x][y] = 1;
+                        map[x-1][y] = 1;
+                        map[x-1][y+1] = 20;
+                        map[x][y+1] = 21;
+                        map[x-1][y+2] = 22;
+                        map[x][y+2] = 23;
+                    }
+                    velocity = -velocity;
+				}
+
+                // CASO ESPECIAL BOSS
+                if(map[x][y] == 29) map[x][y] = 1;
+                if(map[x][y] == 28) map[x][y] = 29;
+
+				// Movimento lateral Boss
+                if (map[x][y] == 24 && velocity < 0){
+						map[x-1][y] = 20;
+						map[x][y] = 21;
+						map[x][y+1] = 23;
+						map[x-1][y+1] = 22;
+						map[x+1][y] = 1;
+						map[x+1][y+1] = 1;
+				}else if (map[x][y] == 25 && velocity > 0 && map[x-2][y] != 29 && map[x-2][y] != 28){
+                        map[x][y] = 20;
+						map[x+1][y] = 21;
+						map[x][y+1] = 22;
+						map[x+1][y+1] = 23;
+						map[x-1][y] = 28;
+						map[x-1][y+1] = 1;
+				}
+
+				// MUDAR DE LINHA - INIMIGO
 				if ((map[x][y] == 13 && x <= 2) || (map[x][y] == 13 && x >= COMPRIMENTO - 3)){
 					if (map[x-1][y] == 9){
 						map[x-1][y] = 1;
@@ -258,11 +358,20 @@ void game(){
 						case 12: printf("%c", 209); map[x][y] += 1; break;
 						case 13: printf("%c", 209); map[x][y] += 1; break;
 
-						// BOSS
-						case 20: printf("/"); break;
-						case 21: printf("\""); break;
-						case 22: printf("\""); break;
-						case 23: printf("/"); break;
+						// BOSS --> SÃO 4 PARTES, MAS MOVEM-SE MAIS RAPIDAMENTE QUE OS MONSTROS, O DOBRO DA VELOCIDADE, LOGO PRECISAMOS DE 8 CASOS
+						case 20: printf("/"); map[x][y] += 4; break;
+						case 21: printf("\\"); map[x][y] += 4; break;
+						case 22: printf("\\"); map[x][y] += 4; break;
+						case 23: printf("/"); map[x][y] += 4; break;
+						case 24: printf("/"); break;
+						case 25: printf("\\"); break;
+						case 26: printf("\\"); break;
+						case 27: printf("/"); break;
+
+						case 28: printf(" "); break; // CASO1 ESPECIAL DO BOSS
+						case 29: printf(" "); break; // CASO2 ESPECIAL DO BOSS
+
+						case 34: printf("X"); break; // EXPLOSÃO DO BOSS
 
 						// RESERVADO
 						default: printf("%d", map[x][y]); break;
@@ -272,7 +381,7 @@ void game(){
 				printMap();
 
 				// Passar de X para EspaÃ§o Vazio
-				if(map[x][y] == 6){
+				if(map[x][y] == 6 || map[x][y] == 34){
 					map[x][y] = 1;
 				}
 
@@ -290,6 +399,25 @@ void game(){
                                 VIDAS -= 1;
 						}
 					}
+				}
+
+                // UM TIRO DO BOSS
+                /*
+				if (map[x][y] == 22 || map[x][y] == 23){
+                    int r = (rand() % (10 + 1 - 1)) + 1;
+                    if (r == 1){
+                        map[x][y+1] = 5;
+                    }
+				}
+				*/
+
+				// DOIS TIROS DO BOSS
+                if (map[x][y] == 22 || map[x][y] == 26){
+                    int r = (rand() % (10 + 1 - 1)) + 1;
+                    if (r == 1){
+                        map[x][y+1] = 5;
+                        map[x+1][y+1] = 5;
+                    }
 				}
 
 				// AtualizaÃ§Ã£o do missil inimigo
@@ -323,8 +451,8 @@ void game(){
 						map[x][y-1] = 1;
 						printMap();
 					}
-					// 2 Se acerta no jogador
 					/*
+					// 2 Se acerta no jogador
 					else if (map[x][y] == 2 && map[x][y-1] == 7){
 						VIDAS -= 1;
 						if (VIDAS == 0){
@@ -367,6 +495,13 @@ void game(){
 						// RESERVADO PARA DIFICULDADE
 						SCORE += 100;
 					}
+					// Colisão com o boss
+                    if (map[x][y-1] == 22 || map[x][y-1] == 23 || map[x][y-1] == 26 || map[x][y-1] == 27){
+						map[x][y] = 34;
+						// RESERVADO PARA DIFICULDADE
+						SCORE += 500;
+						BOSS_HP -= 1;
+					}
 					// Se bate na parede
 					else if (map[x][y-1] == 9){
 						map[x][y] = 1;
@@ -394,6 +529,11 @@ void game(){
             WON_GAME = true;
         }
         else noEnemies = true;
+
+        if (BOSS_HP <= 0){
+            GAME_OVER = true;
+            WON_GAME = true;
+        }
 	}
 
 	// SÃƒÂ³ para ser mais rÃƒÂ¡pido arranjar um nÃƒÂºmero aleatÃƒÂ³rio.
@@ -418,10 +558,12 @@ void game(){
 		int x = COMPRIMENTO / 2;
 		int old_x = x;
 
-		int rounds = 0;
+		int rounds = 1; // A primeira tbm conta
 
 		fillEnemies();
 		fillMap(x, y);
+		// Esta linha é para testes.
+		//fillMapBoss(x, y);
 
 		setConsoleSize(COMPRIMENTO, ALTURA);
 
@@ -437,7 +579,7 @@ void game(){
 			if (GAME_OVER){
                 rounds += 1;
                 // Se o jogo já acabou:
-                if(rounds == MAX_ROUNDS){
+                if(rounds > MAX_ROUNDS){
                     // Isto aqui é só para fazer testes
                     //showM(map);
                     //printf(noEnemies ? "true" : "false");
@@ -467,14 +609,29 @@ void game(){
                 }
                 // Se o jogo ainda não acabou
                 else {
-                    printf("    ROUND %d    ", rounds);
-                    // Para recomeçar o jogo
-                    y = Y_PLAYER;
-                    x = COMPRIMENTO / 2;
-                    fillMap(x, y);
-                    VIDAS = 3;
-                    GAME_OVER = false;
-                    Sleep(4000);
+                    // Se for a última ronda, então luta-se contra o boss, senão é uma ronda normal
+                    if(rounds == MAX_ROUNDS){
+                        system("cls");
+                        printf("        ROUND %d", rounds);
+                        // Para recomeçar o jogo
+                        y = Y_PLAYER;
+                        x = COMPRIMENTO / 2;
+                        fillMapBoss(x, y);
+                        VIDAS = 3;
+                        GAME_OVER = false;
+                        Sleep(4000);
+                    }
+                    else{
+                        system("cls");
+                        printf("        ROUND %d", rounds);
+                        // Para recomeçar o jogo
+                        y = Y_PLAYER;
+                        x = COMPRIMENTO / 2;
+                        fillMap(x, y);
+                        VIDAS = 3;
+                        GAME_OVER = false;
+                        Sleep(4000);
+                    }
                 }
 			}
 
@@ -503,13 +660,13 @@ void game(){
 			//Sleep(10);
 			tick += 1;
 			if(VIDAS == 1){
-				printf("SCORE: %d     \t\t\t VIDAS:  <3", SCORE);
+				printf("SCORE: %d   \t  RONDA: %d \t VIDAS:  <3", SCORE, rounds);
 			}
 			else if (VIDAS == 2){
-				printf("SCORE: %d     \t\t\t VIDAS:  <3 <3", SCORE);
+				printf("SCORE: %d   \t  RONDA: %d \t VIDAS:  <3 <3", SCORE, rounds);
 			}
 			else if (VIDAS == 3){
-				printf("SCORE: %d     \t\t\t VIDAS:  <3 <3 <3", SCORE);
+				printf("SCORE: %d   \t  RONDA: %d \t VIDAS:  <3 <3 <3", SCORE, rounds);
 			}
 			// RESERVADO ELIMINAR
 			else{
