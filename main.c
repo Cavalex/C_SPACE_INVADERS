@@ -518,7 +518,7 @@ void game(){
 						SCORE += 100;
 
 						// SPAWN DO BÓNUS
-						int r1 = (rand() % (1 + 1 - 1)) + 1; // 3.3% de spawn
+						int r1 = (rand() % (30 + 1 - 1)) + 1; // 3.3% de spawn
 						int r2 = (rand() % (100 + 1 - 1)) + 1; // 1% de spawn
                         if (r1 == 1 && map[x][y+1] == 1 && map[x][y+3] == 1) map[x][y+1] = 40;
                         else if (r2 == 1 && map[x][y+1] == 1 && map[x][y+3] == 1) map[x][y+1] = 41;
