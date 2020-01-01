@@ -373,6 +373,24 @@ void game(){
 
 						case 34: printf("X"); break; // EXPLOSÃO DO BOSS
 
+						case 40: // BONUS 1 --> DÁ 150 PONTOS, COMUM
+						    if(map[x][y-1] == 42){
+								printf(" ");
+							}
+							else{
+								printf("o");
+							}
+						    break;
+						case 41: // BONUS 2 --> DÁ UMA VIDA, MUITO RARO
+						    if(map[x][y-1] == 42){
+								printf(" ");
+							}
+							else{
+								printf("O");
+							}
+						    break;
+						case 42: printf(" "); break; // CASO ESPECIAL BONUS(ES)(lol)
+
 						// RESERVADO
 						default: printf("%d", map[x][y]); break;
 					}
@@ -494,9 +512,15 @@ void game(){
 						map[x][y] = 1;
 						// RESERVADO PARA DIFICULDADE
 						SCORE += 100;
+
+						// SPAWN DO BÓNUS
+						int r1 = (rand() % (1 + 1 - 1)) + 1; // 3.3% de spawn
+						int r2 = (rand() % (100 + 1 - 1)) + 1; // 1% de spawn
+                        if (r1 == 1) map[x][y+1] = 40;
+                        else if (r2 == 1) map[x][y+1] = 41;
 					}
 					// Colisão com o boss
-                    			else if (map[x][y-1] == 22 || map[x][y-1] == 23 || map[x][y-1] == 26 || map[x][y-1] == 27){
+                    else if (map[x][y-1] == 22 || map[x][y-1] == 23 || map[x][y-1] == 26 || map[x][y-1] == 27){
 						map[x][y] = 34;
 						// RESERVADO PARA DIFICULDADE
 						SCORE += 500;
@@ -519,11 +543,45 @@ void game(){
 						map[x][y] = 1;
 					}
 				}
+
+				// Movimento do(s) bónus
+				if(map[x][y] == 40 || map[x][y] == 41){
+					// Se acerta no jogador
+					if (map[x][y+1] == 2 && map[x][y-1] == 42){
+                        if (map[x][y] == 40) SCORE += 150;
+                        else if (map[x][y] == 41 && VIDAS <= 3) VIDAS += 1;
+						map[x][y-1] = 1;
+					}
+					// Se bate na barreira
+					// Vamos fazer com que ele fique parado no chão
+					else if (y >= ALTURA - 2){
+                        map[x][y-1] = 1;
+						if (map[x][y] == 40) map[x][y] = 40;
+						if (map[x][y] == 41) map[x][y] = 41;
+					}
+					// Vamos fazer que se o bónus bate na barreira ele desaparece, não temos como fazê-lo passar pela parede.
+					// Se bate na parede
+					else if (map[x][y+1] == 9){
+						map[x][y] = 1;
+					}
+					// Se tem um espaÃ§o vazio Ã  frente
+					else{
+						if (!(map[x][y-1] == 42)){
+							if (map[x][y] == 40) map[x][y+1] = 40;
+							if (map[x][y] == 41) map[x][y+1] = 41;
+                            map[x][y] = 42;
+						}
+						else{
+							map[x][y-1] = 1;
+						}
+					}
+				}
 			}
 			printf("\n");
 		}
 		shots = shotss;
 
+        // Para acabar o jogo:
         if (noEnemies){ // GANHASTE!
             GAME_OVER = true;
             WON_GAME = true;
