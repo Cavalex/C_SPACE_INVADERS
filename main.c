@@ -496,7 +496,7 @@ void game(){
 						SCORE += 100;
 					}
 					// Colisão com o boss
-                    if (map[x][y-1] == 22 || map[x][y-1] == 23 || map[x][y-1] == 26 || map[x][y-1] == 27){
+                    			else if (map[x][y-1] == 22 || map[x][y-1] == 23 || map[x][y-1] == 26 || map[x][y-1] == 27){
 						map[x][y] = 34;
 						// RESERVADO PARA DIFICULDADE
 						SCORE += 500;
