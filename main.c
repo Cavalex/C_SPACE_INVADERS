@@ -391,6 +391,10 @@ void game(){
 						    break;
 						case 42: printf(" "); break; // CASO ESPECIAL BONUS(ES)(lol)
 
+						case 43: printf("o");
+						case 44: printf("O");
+
+
 						// RESERVADO
 						default: printf("%d", map[x][y]); break;
 					}
@@ -516,8 +520,8 @@ void game(){
 						// SPAWN DO BÓNUS
 						int r1 = (rand() % (1 + 1 - 1)) + 1; // 3.3% de spawn
 						int r2 = (rand() % (100 + 1 - 1)) + 1; // 1% de spawn
-                        if (r1 == 1) map[x][y+1] = 40;
-                        else if (r2 == 1) map[x][y+1] = 41;
+                        if (r1 == 1 && map[x][y+1] == 1 && map[x][y+3] == 1) map[x][y+1] = 40;
+                        else if (r2 == 1 && map[x][y+1] == 1 && map[x][y+3] == 1) map[x][y+1] = 41;
 					}
 					// Colisão com o boss
                     else if (map[x][y-1] == 22 || map[x][y-1] == 23 || map[x][y-1] == 26 || map[x][y-1] == 27){
@@ -553,16 +557,20 @@ void game(){
 						map[x][y-1] = 1;
 					}
 					// Se bate na barreira
-					// Vamos fazer com que ele fique parado no chão
+					// // Vamos fazer com que ele fique parado no chão
 					else if (y >= ALTURA - 2){
                         map[x][y-1] = 1;
-						if (map[x][y] == 40) map[x][y] = 40;
-						if (map[x][y] == 41) map[x][y] = 41;
+                        map[x][y] = 1;
+                        /*
+						if (map[x][y] == 40) map[x][y] = 43;
+						if (map[x][y] == 41) map[x][y] = 44;
+                        */
 					}
 					// Vamos fazer que se o bónus bate na barreira ele desaparece, não temos como fazê-lo passar pela parede.
 					// Se bate na parede
 					else if (map[x][y+1] == 9){
 						map[x][y] = 1;
+						map[x][y-1] = 1;
 					}
 					// Se tem um espaÃ§o vazio Ã  frente
 					else{
