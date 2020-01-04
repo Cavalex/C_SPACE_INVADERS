@@ -623,7 +623,6 @@ void game(){
 		int y = Y_PLAYER;
 		int x = COMPRIMENTO / 2;
 		int old_x = x;
-
 		int rounds = 1; // A primeira tbm conta
 
 		fillEnemies();
@@ -658,9 +657,9 @@ void game(){
                         printf("ERRO VIDAS: %d!!!", VIDAS);
                     }
                     if (WON_GAME == true)
-                        printf("\n        GANHASTE!!!");
+                        printf("\n        GANHASTE!!! :D");
                     else
-                        printf("\n        PERDESTE!!!"); // MESNAGEM DE GAME OVER
+                        printf("\n        PERDESTE!!! D:"); // MESNAGEM DE GAME OVER
                     Sleep(1000);
                     printf("         PONTUACAO: %d", SCORE);
                     printf("\n\n Qual e o seu nome? --> ");
@@ -671,7 +670,31 @@ void game(){
                     scanf("%s", nome);
                     // RESERVADO EspaÃ§o para a leaderboard
                     Sleep(2000);
-                    break;
+                    printf("\n\n Quer jogar novamente? S/N");
+                    char a;
+                    scanf("%c", a);
+                    // Se recomeçar o jogo
+                    if (a == "S" || a == "s"){
+                    	rounds = 1;
+                    	y = Y_PLAYER;
+                        x = COMPRIMENTO / 2;
+                        fillEnemies();
+                        fillMap(x, y);
+                        VIDAS = 3;
+                        SCORE = 0;
+                        GAME_OVER = false;
+					}
+					else{
+						rounds = 1;
+                    	y = Y_PLAYER;
+                        x = COMPRIMENTO / 2;
+                        fillEnemies();
+                        fillMap(x, y);
+                        VIDAS = 3;
+                        SCORE = 0;
+                        GAME_OVER = false;
+                        main();
+					}
                 }
                 // Se o jogo ainda não acabou
                 else {
@@ -745,6 +768,13 @@ void game(){
 	startGame();
 }
 
+void credits(){
+	system("cls");
+	printf("Criadores do jogo:\n-->João Manuel Alves Pereira\n-->Mateus Medeiros Pereira\n-->Matheus Carlos Santos Costa");
+	Sleep(10000);
+	menu();
+}
+
 void easterEggs(){
     // Um poema aleatório
     // Tivemos demasiado tempo para fazer o jogo xD
@@ -810,7 +840,8 @@ void menu(){
 	Sleep(350);
 	printf(" 1 --> SPACE INVADERS");
 	printf("\n 2 --> SETTINGS");
-	printf("\n 3 --> EXIT\n");
+	printf("\n 3 --> CREDITS");
+	printf("\n 4 --> EXIT\n");
 	puts(""
 	"	                       *     .--.\n"
 	"	                            / /  `\n"
@@ -838,12 +869,14 @@ void menu(){
 	switch (choice){
 		case 1: game(); system("cls"); break;
 		//case 2: settings(); system("cls"); break;
-		//case 3: credits(); system("cls"); break;
-		case 4: easterEggs(); system("cls"); break;
+		case 3: credits(); system("cls"); break;
+		case 4: system("cls"); exit(1); break;
+		case 5: easterEggs(); system("cls"); break;
 		default: missed = true; main(); break;
 	}
 }
 
-void main(){
+int main(){
 	menu();
+	return 0;
 }
