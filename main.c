@@ -12,10 +12,11 @@
 #define Y_PLAYER (ALTURA - 2)
 bool GAME_OVER = false;
 bool WON_GAME = false;
+int dif = 1;
 int map[COMPRIMENTO][ALTURA];
 int velocity = -1; // A velocidade dos inimigos
 int SCORE = 0;
-int VIDAS = 3;
+int VIDAS;
 int MAX_SHOTS = 5;
 int MAX_ROUNDS = 3;
 int BOSS_HP = 10;
@@ -527,7 +528,7 @@ void game(){
                     else if (map[x][y-1] == 22 || map[x][y-1] == 23 || map[x][y-1] == 26 || map[x][y-1] == 27){
 						map[x][y] = 34;
 						// RESERVADO PARA DIFICULDADE
-						SCORE += 500;
+						SCORE += 200;
 						BOSS_HP -= 1;
 					}
 					// Se bate na parede
@@ -611,6 +612,13 @@ void game(){
 	}
 
 	void startGame(){
+		
+		switch(dif){
+			case 1: VIDAS = 3; break;
+			case 2: VIDAS = 2; break;
+			case 3: VIDAS = 1; break;
+			default: VIDAS = 3; break;
+		}
 
 		int tick = 0;
 		int i = 0;
@@ -657,9 +665,9 @@ void game(){
                         printf("ERRO VIDAS: %d!!!", VIDAS);
                     }
                     if (WON_GAME == true)
-                        printf("\n        GANHASTE!!! :D");
+                        printf("\n       GANHASTE!!! :D");
                     else
-                        printf("\n        PERDESTE!!! D:"); // MESNAGEM DE GAME OVER
+                        printf("\n       PERDESTE!!! D:"); // MESNAGEM DE GAME OVER
                     Sleep(1000);
                     printf("         PONTUACAO: %d", SCORE);
                     printf("\n\n Qual e o seu nome? --> ");
@@ -672,15 +680,20 @@ void game(){
                     Sleep(2000);
                     printf("\n\n Quer jogar novamente? S/N");
                     char a;
-                    scanf("%c", a);
+                    scanf("%c", &a);
                     // Se recomeçar o jogo
-                    if (a == "S" || a == "s"){
+                    if (a == "S" || a == "s" || a == ""){
                     	rounds = 1;
                     	y = Y_PLAYER;
                         x = COMPRIMENTO / 2;
                         fillEnemies();
                         fillMap(x, y);
-                        VIDAS = 3;
+                        switch(dif){
+                        	case 1: VIDAS = 3; break;
+                        	case 2: VIDAS = 2; break;
+                        	case 3: VIDAS = 1; break;
+                        	default: VIDAS = 3; break;
+						}
                         SCORE = 0;
                         GAME_OVER = false;
 					}
@@ -690,7 +703,12 @@ void game(){
                         x = COMPRIMENTO / 2;
                         fillEnemies();
                         fillMap(x, y);
-                        VIDAS = 3;
+                        switch(dif){
+                        	case 1: VIDAS = 3; break;
+                        	case 2: VIDAS = 2; break;
+                        	case 3: VIDAS = 1; break;
+                        	default: VIDAS = 3; break;
+						}
                         SCORE = 0;
                         GAME_OVER = false;
                         main();
@@ -706,7 +724,12 @@ void game(){
                         y = Y_PLAYER;
                         x = COMPRIMENTO / 2;
                         fillMapBoss(x, y);
-                        VIDAS = 3;
+                        switch(dif){
+                        	case 1: VIDAS = 3; break;
+                        	case 2: VIDAS = 2; break;
+                        	case 3: VIDAS = 1; break;
+                        	default: VIDAS = 3; break;
+						}
                         GAME_OVER = false;
                         Sleep(4000);
                     }
@@ -717,7 +740,12 @@ void game(){
                         y = Y_PLAYER;
                         x = COMPRIMENTO / 2;
                         fillMap(x, y);
-                        VIDAS = 3;
+                        switch(dif){
+                        	case 1: VIDAS = 3; break;
+                        	case 2: VIDAS = 2; break;
+                        	case 3: VIDAS = 1; break;
+                        	default: VIDAS = 3; break;
+						}
                         GAME_OVER = false;
                         Sleep(4000);
                     }
@@ -766,6 +794,23 @@ void game(){
 		}
 	}
 	startGame();
+}
+
+void difficulty(){
+	system("cls");
+	printf(" Escolha a dificuldade:\n");
+	printf(" 1 --> Normal\n");
+	printf(" 2 --> Difícil\n");
+	printf(" 3 --> Impossível\n");
+	int a;
+	scanf("%d", &a);
+	switch(a){
+		case 1: dif = 1; break;
+		case 2: dif = 2; break;
+		case 3: dif = 3; break;
+		default: dif = 1; break;
+	}
+	menu();
 }
 
 void credits(){
@@ -839,7 +884,7 @@ void menu(){
 	printf(".\n\n\n");
 	Sleep(350);
 	printf(" 1 --> SPACE INVADERS");
-	printf("\n 2 --> SETTINGS");
+	printf("\n 2 --> DIFFICULTY");
 	printf("\n 3 --> CREDITS");
 	printf("\n 4 --> EXIT\n");
 	puts(""
@@ -868,7 +913,7 @@ void menu(){
 	scanf("%d", &choice);
 	switch (choice){
 		case 1: game(); system("cls"); break;
-		//case 2: settings(); system("cls"); break;
+		case 2: difficulty(); system("cls"); break;
 		case 3: credits(); system("cls"); break;
 		case 4: system("cls"); exit(1); break;
 		case 5: easterEggs(); system("cls"); break;
