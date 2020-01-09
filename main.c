@@ -654,7 +654,6 @@ void game(){
 			default: VIDAS = 3; break;
 		}
 
-		int tick = 0;
 		int i = 0;
 		int highestX = 0; // O que estÃ¡ mais Ã  esquerda ou mais Ã  direita
 
@@ -827,7 +826,6 @@ void game(){
 			move = 0;
 			//timer(10); // Para o loop;
 			//Sleep(10);
-			tick += 1;
 			if(VIDAS == 1){
 				printf("SCORE: %d   \t  RONDA: %d \t VIDAS:  <3", SCORE, rounds);
 			}
