@@ -710,8 +710,6 @@ void game(){
                     // como por exemplo spammar as teclas, não queremos que o nome do jogador fique "1".
                     //printf(" "); // ???
                     scanf("%s", &nome);
-					
-					gets(nome);
 					//scanf("%d", &score);
 					printf("%s %d", nome, SCORE);
 					FILE * file = fopen("scores.txt", "a");
