@@ -4,6 +4,7 @@
 #include <time.h>
 #include <stdbool.h> // Para criar funÃ§Ãµes booleanas
 #include <conio.h>
+#include <locale.h>
 
 #define NUMBER_OF_ENEMIES 24
 #define ARRAY_COMPRIMENTO 3
@@ -22,6 +23,7 @@ int MAX_ROUNDS = 3;
 int BOSS_HP = 10;
 int shots = 0;
 int enemies[NUMBER_OF_ENEMIES][ARRAY_COMPRIMENTO];
+int ScoreLine;
 //bool invulnerability = true;
 
 // PARA TESTAR
@@ -35,7 +37,39 @@ void showM(int m[COMPRIMENTO][ALTURA]){
 	}
 }
 
-
+void printHighScore(void){
+	char * novalinha;
+	char personHighScore[150];
+	void getNome(){
+		int n = 0;
+		FILE * file = fopen("nomes.txt", "r");
+		while(!feof(file)){
+			n++;
+			fgets(personHighScore, 150, file);
+			novalinha = strtok(personHighScore, "\n");
+			if (n == ScoreLine) break;
+		}
+		//printf("%s", nome2);
+	}
+	
+	FILE * file;
+	file = fopen("scores.txt", "r");
+	int c;
+	int n = 0;
+	int b = -1;
+	while(!feof(file)){
+		fscanf(file, "%d", &c);
+		if (fgetc(file) == '\n') n++;
+		if (c > b){
+			b = c;
+			ScoreLine = n;
+		}
+	}
+	getNome();
+	//printf("\n HighScore - %d linha - %d", b, ScoreLine);
+	printf(" HighScore:\n--> %s %d ", novalinha, b);
+	fclose(file);
+}
 
 // FunÃƒÂ§ÃƒÂ£o que encontrei para mudar o tamanho da consola.
 // Para mudar o tamanho mexam nas variÃƒÂ¡veis em cima, podem ignorar o cÃƒÂ³digo dentro desta funÃƒÂ§ÃƒÂ£o.
@@ -522,7 +556,7 @@ void game(){
 						int r1 = (rand() % (30 + 1 - 1)) + 1; // 3.3% de spawn
 						int r2 = (rand() % (100 + 1 - 1)) + 1; // 1% de spawn
                         if (r1 == 1 && map[x][y+1] == 1 && map[x][y+3] == 1) map[x][y+1] = 40;
-                        else if (r2 == 1 && map[x][y+1] == 1 && map[x][y+3] == 1) map[x][y+1] = 41;
+                        else if (r2 == 1 && map[x][y+1] == 1 && map[x][y+3] == 1 && VIDAS <= 2) map[x][y+1] = 41;
 					}
 					// Colisão com o boss
                     else if (map[x][y-1] == 22 || map[x][y-1] == 23 || map[x][y-1] == 26 || map[x][y-1] == 27){
@@ -657,6 +691,7 @@ void game(){
                     //showM(map);
                     //printf(noEnemies ? "true" : "false");
                     //Sleep(200000);
+                    int ScoreLine;
                     char nome[100];
                     system("cls");
                     // Depois é para eliminar isto!
@@ -675,9 +710,23 @@ void game(){
                     // Queremos ter o scanf porque se houver algum tipo de erro ao acabar o jogo,
                     // como por exemplo spammar as teclas, não queremos que o nome do jogador fique "1".
                     //printf(" "); // ???
-                    scanf("%s", nome);
-                    // RESERVADO EspaÃ§o para a leaderboard
-                    Sleep(2000);
+                    scanf("%s", &nome);
+					
+					gets(nome);
+					//scanf("%d", &score);
+					printf("%s %d", nome, SCORE);
+					FILE * file = fopen("scores.txt", "a");
+					fprintf(file, "%d\n", SCORE);
+					fclose(file);
+					FILE * file2 = fopen("nomes.txt", "a");
+					fprintf(file2, "%s\n", nome);
+					fclose(file2);
+					printHighScore();
+					printf("\n Press anyhting to close the game: ");
+					char a;
+					scanf("%c", a);
+					
+					/*
                     printf("\n\n Quer jogar novamente? S/N");
                     char a;
                     scanf("%c", &a);
@@ -696,30 +745,31 @@ void game(){
 						}
                         SCORE = 0;
                         GAME_OVER = false;
+                        WON_GAME = false;
 					}
-					else{
-						rounds = 1;
-                    	y = Y_PLAYER;
-                        x = COMPRIMENTO / 2;
-                        fillEnemies();
-                        fillMap(x, y);
-                        switch(dif){
-                        	case 1: VIDAS = 3; break;
-                        	case 2: VIDAS = 2; break;
-                        	case 3: VIDAS = 1; break;
-                        	default: VIDAS = 3; break;
-						}
-                        SCORE = 0;
-                        GAME_OVER = false;
-                        main();
+					*/
+					rounds = 1;
+                	y = Y_PLAYER;
+                    x = COMPRIMENTO / 2;
+                    fillEnemies();
+                    fillMap(x, y);
+                    switch(dif){
+                    	case 1: VIDAS = 3; break;
+                    	case 2: VIDAS = 2; break;
+                    	case 3: VIDAS = 1; break;
+                    	default: VIDAS = 3; break;
 					}
+                    SCORE = 0;
+                    GAME_OVER = false;
+                    WON_GAME = false;
+                    main();
                 }
                 // Se o jogo ainda não acabou
                 else {
                     // Se for a última ronda, então luta-se contra o boss, senão é uma ronda normal
                     if(rounds == MAX_ROUNDS){
                         system("cls");
-                        printf("        ROUND %d", rounds);
+                        printf("          ROUND %d", rounds);
                         // Para recomeçar o jogo
                         y = Y_PLAYER;
                         x = COMPRIMENTO / 2;
@@ -731,11 +781,12 @@ void game(){
                         	default: VIDAS = 3; break;
 						}
                         GAME_OVER = false;
+                        WON_GAME = false;
                         Sleep(4000);
                     }
                     else{
                         system("cls");
-                        printf("        ROUND %d", rounds);
+                        printf("          ROUND %d", rounds);
                         // Para recomeçar o jogo
                         y = Y_PLAYER;
                         x = COMPRIMENTO / 2;
@@ -747,6 +798,7 @@ void game(){
                         	default: VIDAS = 3; break;
 						}
                         GAME_OVER = false;
+                        WON_GAME = false;
                         Sleep(4000);
                     }
                 }
@@ -773,7 +825,7 @@ void game(){
 			}
 
 			move = 0;
-			timer(10); // Para o loop;
+			//timer(10); // Para o loop;
 			//Sleep(10);
 			tick += 1;
 			if(VIDAS == 1){
@@ -859,7 +911,7 @@ void easterEggs(){
     scanf("%s", &nada);
     printf("Ok then I guess I'll show you my plans... but promise to not tell anyone you hearing me?");
     scanf("%s", &nada);
-    printf("...WIP...");
+    printf("...Well, guess this group deserves a 20...\n");
     printf("Press anything to go to the main menu: ");
     scanf("%s", &nada);
     main();
@@ -922,6 +974,7 @@ void menu(){
 }
 
 int main(){
+	//setlocale(LC_ALL, "Portuguese");
 	menu();
 	return 0;
 }
