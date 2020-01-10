@@ -49,9 +49,10 @@ void printHighScore(void){
 			novalinha = strtok(personHighScore, "\n");
 			if (n == ScoreLine) break;
 		}
+		fclose(file);
 		//printf("%s", nome2);
 	}
-	
+
 	FILE * file;
 	file = fopen("scores.txt", "r");
 	int c;
@@ -561,8 +562,12 @@ void game(){
 					// Colisão com o boss
                     else if (map[x][y-1] == 22 || map[x][y-1] == 23 || map[x][y-1] == 26 || map[x][y-1] == 27){
 						map[x][y] = 34;
-						// RESERVADO PARA DIFICULDADE
-						SCORE += 200;
+                        switch(dif){
+                            case 1: SCORE += 200; break;
+                            case 2: SCORE += 250; break;
+                            case 3: SCORE += 300; break;
+                            default: SCORE += 200; break;
+                        }
 						BOSS_HP -= 1;
 					}
 					// Se bate na parede
@@ -646,7 +651,7 @@ void game(){
 	}
 
 	void startGame(){
-		
+
 		switch(dif){
 			case 1: VIDAS = 3; break;
 			case 2: VIDAS = 2; break;
@@ -711,7 +716,7 @@ void game(){
                     //printf(" "); // ???
                     scanf("%s", &nome);
 					//scanf("%d", &score);
-					printf("%s %d", nome, SCORE);
+					//printf("%s %d", nome, SCORE);
 					FILE * file = fopen("scores.txt", "a");
 					fprintf(file, "%d\n", SCORE);
 					fclose(file);
@@ -722,7 +727,7 @@ void game(){
 					printf("\n Press anyhting to close the game: ");
 					char a;
 					scanf("%c", a);
-					
+
 					/*
                     printf("\n\n Quer jogar novamente? S/N");
                     char a;
@@ -766,7 +771,7 @@ void game(){
                     // Se for a última ronda, então luta-se contra o boss, senão é uma ronda normal
                     if(rounds == MAX_ROUNDS){
                         system("cls");
-                        printf("          ROUND %d", rounds);
+                        printf("               ROUND %d", rounds);
                         // Para recomeçar o jogo
                         y = Y_PLAYER;
                         x = COMPRIMENTO / 2;
@@ -783,7 +788,7 @@ void game(){
                     }
                     else{
                         system("cls");
-                        printf("          ROUND %d", rounds);
+                        printf("               ROUND %d", rounds);
                         // Para recomeçar o jogo
                         y = Y_PLAYER;
                         x = COMPRIMENTO / 2;
