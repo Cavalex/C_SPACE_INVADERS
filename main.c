@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <time.h>
-#include <stdbool.h> // Para criar funÃ§Ãµes booleanas
+#include <stdbool.h> // Para criar funções booleanas
 #include <conio.h>
 #include <locale.h>
 
@@ -72,8 +72,8 @@ void printHighScore(void){
 	fclose(file);
 }
 
-// FunÃƒÂ§ÃƒÂ£o que encontrei para mudar o tamanho da consola.
-// Para mudar o tamanho mexam nas variÃƒÂ¡veis em cima, podem ignorar o cÃƒÂ³digo dentro desta funÃƒÂ§ÃƒÂ£o.
+// Função que encontrei para mudar o tamanho da consola.
+// Para mudar o tamanho mexam nas variáveis acima, podem ignorar o código dentro desta função.
 void setConsoleSize(int C, int A){
 	HANDLE wHnd;    // Handle to write to the console.
 
@@ -240,8 +240,8 @@ void game(){
 	    // Tempo inicial
 	    clock_t start_time = clock();
 
-	    // Uma espÃ©cie de sleep, a funÃ§Ã£o timer sÃ³ acaba quando o while terminar,
-	    //logo sÃ³ termina quando se passar o tempo que colocamos no parÃ¢metro.
+	    // Uma espécie de sleep, a função timer só acaba quando o while terminar,
+	    //logo só termina quando se passar o tempo que colocamos no parâmetro.
 	    while (clock() < start_time + n)
 			;
 	}
@@ -249,8 +249,8 @@ void game(){
 	void showMap(int new_xP, int old_xP){
 		bool changeY = false;
 		bool noEnemies = true;
-		// Visto que nÃ£o podemos somente declarar a variÃ¡vel sozinha (dÃ¡ erro ao atualizar se a variÃ¡vel nÃ£o tem valor)
-		// vamos colocar coordenadas que sÃ£o impossÃ­veis de obter, negativas.
+		// Visto que não podemos somente declarar a variável sozinha (da erro ao atualizar se a variável não tem valor)
+		// vamos colocar coordenadas que são impossíveis de obter, negativas.
 		int skipShotX = -100;
 		int skipShotY = -100;
 		int y = 0;
@@ -363,7 +363,7 @@ void game(){
 					}
 				}
 
-				// AtualizaÃ§Ã£o do jogador
+				// Atualização do jogador
 				if(x == new_xP && new_xP != old_xP && y == Y_PLAYER){
 					map[x][y] = 2;
 				}
@@ -375,7 +375,7 @@ void game(){
 					switch(map[x][y]){
 						// Casos normais que duram 1 tick
 						case 0: printf("#"); break; // BARREIRA
-						case 1: printf(" "); break; // ESPAÃ‡O
+						case 1: printf(" "); break; // ESPAÇO
 						case 2: printf("A"); break; // JOGADOR
 						case 4: printf("^"); break; // MISSIL JOGADOR
 						case 5:
@@ -388,14 +388,14 @@ void game(){
 							break; // MISSIL INIMIGO
 						case 6: printf("X"); break; // EXPLOSIONNNNN
 						case 7: printf(" "); break; // CASO ESPECIAL DO MISSIL INIMIGO
-						case 8: printf("%c", 209); break; // CASO ESPECIAL MISSIL-INIMIGO EM CIMA DE INIMIGO
-						case 9: printf("%c", 233); break; // BARREIRA
+						case 8: printf("%c", 203); break; // CASO ESPECIAL MISSIL-INIMIGO EM CIMA DE INIMIGO
+						case 9: printf("%c", 219); break; // BARREIRA
 
 						// INIMIGOS
-						case 10: printf("%c", 209); map[x][y] += 1; break;
-						case 11: printf("%c", 209); map[x][y] += 1; break;
-						case 12: printf("%c", 209); map[x][y] += 1; break;
-						case 13: printf("%c", 209); map[x][y] += 1; break;
+						case 10: printf("%c", 203); map[x][y] += 1; break;
+						case 11: printf("%c", 203); map[x][y] += 1; break;
+						case 12: printf("%c", 203); map[x][y] += 1; break;
+						case 13: printf("%c", 203); map[x][y] += 1; break;
 
 						// BOSS --> SÃO 4 PARTES, MAS MOVEM-SE MAIS RAPIDAMENTE QUE OS MONSTROS, O DOBRO DA VELOCIDADE, LOGO PRECISAMOS DE 8 CASOS
 						case 20: printf("/"); map[x][y] += 4; break;
@@ -441,7 +441,7 @@ void game(){
 
 				printMap();
 
-				// Passar de X para EspaÃ§o Vazio
+				// Passar de X para Espaço Vazio
 				if(map[x][y] == 6 || map[x][y] == 34){
 					map[x][y] = 1;
 				}
@@ -481,10 +481,10 @@ void game(){
                     }
 				}
 
-				// AtualizaÃ§Ã£o do missil inimigo
-				// JÃ¡ que esta funÃ§Ã£o atualiza de baixo para cima e o tiro tbm vai de baixo para cima,
-				// temos que nos certificar que ele nÃ£o escreveu jÃ¡ um "|", logo criamos um caso especial,
-				// o 7, que dÃ¡ "track" ao movimento do tiro.
+				// Atualização do missil inimigo
+				// Já que esta função atualiza de baixo para cima e o tiro tbm vai de baixo para cima,
+				// temos que nos certificar que ele não escreveu já um "|", logo criamos um caso especial,
+				// o 7, que dá "track" ao movimento do tiro.
 				if(map[x][y] == 5){
                     // Se tem um inimigo atrás e a barreira à frente, ou seja,
                     // se há 1 espaço de diferença entre o inimigo e a barreira.
@@ -535,7 +535,7 @@ void game(){
 						map[x][y] = 1;
 						map[x][y+1] = 1;
 					}
-					// Se tem um espaÃ§o vazio Ã  frente
+					// Se tem um espaço vazio à frente
 					else{
 						if (!(map[x][y-1] == 7)){
 							map[x][y] = 7;
@@ -547,9 +547,9 @@ void game(){
 					}
 				}
 
-				// AtualizaÃ§Ã£o do missil do jogador
+				// Atualização do missil do jogador
 				if(map[x][y] == 4){
-					// ColisÃ£o
+					// Colisão
 					if (map[x][y-1] == 10 || map[x][y-1] == 11 || map[x][y-1] == 12 || map[x][y-1] == 13 || map[x][y-1] == 14){
 						map[x][y-1] = 6;
 						map[x][y] = 1;
@@ -615,7 +615,7 @@ void game(){
 						map[x][y] = 1;
 						map[x][y-1] = 1;
 					}
-					// Se tem um espaÃ§o vazio Ã  frente
+					// Se tem um espaaço vazio à frente
 					else{
 						if (!(map[x][y-1] == 42)){
 							if (map[x][y] == 40) map[x][y+1] = 40;
@@ -645,9 +645,9 @@ void game(){
         }
 	}
 
-	// SÃƒÂ³ para ser mais rÃƒÂ¡pido arranjar um nÃƒÂºmero aleatÃƒÂ³rio.
+	// Só para ser mais rápido arranjar um número aleatório
 	int getRandomNumber(int min, int max){
-		// um nÃƒÂºmero aleatÃƒÂ³rio entre 0 e a
+		// um número aleatório entre 0 e a
 		int r = (rand() % (max + 1 - min)) + min;
 
 		return r;
@@ -663,7 +663,7 @@ void game(){
 		}
 
 		int i = 0;
-		int highestX = 0; // O que estÃ¡ mais Ã  esquerda ou mais Ã  direita
+		int highestX = 0; // O que está mais à esquerda ou mais à direita
 
 		char move;
 
@@ -733,29 +733,6 @@ void game(){
 					printf("\n Press anyhting to close the game: ");
 					char a;
 					scanf("%c", a);
-
-					/*
-                    printf("\n\n Quer jogar novamente? S/N");
-                    char a;
-                    scanf("%c", &a);
-                    // Se recomeçar o jogo
-                    if (a == "S" || a == "s" || a == ""){
-                    	rounds = 1;
-                    	y = Y_PLAYER;
-                        x = COMPRIMENTO / 2;
-                        fillEnemies();
-                        fillMap(x, y);
-                        switch(dif){
-                        	case 1: VIDAS = 3; break;
-                        	case 2: VIDAS = 2; break;
-                        	case 3: VIDAS = 1; break;
-                        	default: VIDAS = 3; break;
-						}
-                        SCORE = 0;
-                        GAME_OVER = false;
-                        WON_GAME = false;
-					}
-					*/
 					rounds = 1;
                 	y = Y_PLAYER;
                     x = COMPRIMENTO / 2;
@@ -841,7 +818,7 @@ void game(){
                 }
 			}
 
-			// Quando carregamos no "UP", Ã© lanÃ§ado um mÃ­ssil
+			// Quando carregamos no "UP", é lançado um missil
 			if (move == 72){
 				if (!(shots >= MAX_SHOTS)){
 					map[x][Y_PLAYER-1] = 4;
