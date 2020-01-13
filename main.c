@@ -350,8 +350,11 @@ void game(){
 						for(y2 = 0; y2 < ALTURA; y2++){
 							for(x2 = 0; x2 < COMPRIMENTO; x2++){
 								if (map[x2][y2] >= 13){
-									map[x2][y2+1] = 10;
-									map[x2][y2] = 1;
+                                    if (y == Y_PLAYER) GAME_OVER = true;
+                                    else {
+                                        map[x2][y2+1] = 10;
+                                        map[x2][y2] = 1;
+                                    }
 								}
 							}
 						}
