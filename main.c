@@ -433,8 +433,6 @@ void game(){
 						case 43: printf("o");
 						case 44: printf("O");
 
-
-						// RESERVADO
 						default: printf("%d", map[x][y]); break;
 					}
 				}
@@ -553,7 +551,6 @@ void game(){
 					if (map[x][y-1] == 10 || map[x][y-1] == 11 || map[x][y-1] == 12 || map[x][y-1] == 13 || map[x][y-1] == 14){
 						map[x][y-1] = 6;
 						map[x][y] = 1;
-						// RESERVADO PARA DIFICULDADE
 						SCORE += 100;
 
 						// SPAWN DO BÓNUS
@@ -702,10 +699,6 @@ void game(){
                     char nome[100];
                     system("cls");
                     // Depois é para eliminar isto!
-                    // RESERVADO ELIMINAR
-                    if (VIDAS < 0){
-                        printf("ERRO VIDAS: %d!!!", VIDAS);
-                    }
                     if (WON_GAME == true)
                         printf("\n       GANHASTE!!! :D");
                         if (VIDAS == 3) SCORE += 300;
@@ -836,11 +829,6 @@ void game(){
 			}
 			else if (VIDAS == 3){
 				printf("SCORE: %d   \t  RONDA: %d \t VIDAS:  <3 <3 <3", SCORE, rounds);
-			}
-			// RESERVADO ELIMINAR
-			else{
-				printf("ERRO VIDAS: %d!!!", VIDAS);
-				GAME_OVER = true;
 			}
 			//Beep(4000, 300); // Para fazer sons!
 		}
