@@ -705,10 +705,13 @@ void game(){
                     }
                     if (WON_GAME == true)
                         printf("\n       GANHASTE!!! :D");
+                        if (VIDAS == 3) SCORE += 300;
+                        else if (VIDAS == 2) SCORE += 200;
+                        else if (VIDAS == 1) SCORE += 100;
                     else
                         printf("\n       PERDESTE!!! D:"); // MESNAGEM DE GAME OVER
                     Sleep(1000);
-                    printf("         PONTUACAO: %d", SCORE);
+                    printf("        PONTUACAO: %d", SCORE);
                     printf("\n\n Qual e o seu nome? --> ");
                     //gets(nome);
                     // Queremos ter o scanf porque se houver algum tipo de erro ao acabar o jogo,
@@ -771,7 +774,7 @@ void game(){
                     // Se for a última ronda, então luta-se contra o boss, senão é uma ronda normal
                     if(rounds == MAX_ROUNDS){
                         system("cls");
-                        printf("               ROUND %d", rounds);
+                        printf("                  ROUND %d", rounds);
                         // Para recomeçar o jogo
                         y = Y_PLAYER;
                         x = COMPRIMENTO / 2;
@@ -788,7 +791,7 @@ void game(){
                     }
                     else{
                         system("cls");
-                        printf("               ROUND %d", rounds);
+                        printf("                  ROUND %d", rounds);
                         // Para recomeçar o jogo
                         y = Y_PLAYER;
                         x = COMPRIMENTO / 2;
@@ -817,6 +820,22 @@ void game(){
 			if (move == 77 && x < COMPRIMENTO - 2){
 				old_x = x;
 				x += 1;
+			}
+			if (move == 27){
+                int i = 1;
+                while(true){
+                    printf("\n\n\n                THE GAME IS PAUSED\n");
+                    printf("             PRESS ESC AGAIN TO RESUME");
+                    system("cls");
+                    char pause_move;
+                    if (kbhit()){
+                        pause_move = getch();
+                    }
+                    if (pause_move == 27){
+                        pause_move = 1;
+                        break;
+                    }
+                }
 			}
 
 			// Quando carregamos no "UP", Ã© lanÃ§ado um mÃ­ssil
